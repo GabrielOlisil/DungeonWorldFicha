@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DungeonWorldFIcha.Migrations
 {
     [DbContext(typeof(DungeonWorldContext))]
-    [Migration("20250216223902_InitialCreate")]
+    [Migration("20250217132538_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

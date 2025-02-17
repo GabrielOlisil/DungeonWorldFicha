@@ -11,84 +11,130 @@
 <h3>Criar</h3>
 
 <EditForm Model="@personagem" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator/>
+    <DataAnnotationsValidator />
 
-    <!-- Nome do Personagem -->
-    <div>
-        <label>Nome:</label>
-        <InputText @bind-Value="personagem.Nome" />
-    </div>
-    <!-- PVs -->
-    <div>
-        <label>Pv:</label>
-        <InputNumber @bind-Value="personagem.Pv" />
-    </div>
-    <!-- Armadura -->
-    <div>
-        <label>Armadura:</label>
-        <InputNumber @bind-Value="personagem.Armadura" />
-    </div>
-    <!-- Dano -->
-    <div>
-        <label>Dano:</label>
-        <InputNumber @bind-Value="personagem.DadoDano" />
-    </div>
-    <!-- Nível -->
-    <div>
-        <label>Nível:</label>
-        <InputNumber @bind-Value="personagem.Nivel" />
-    </div>
-    <!-- Descricao -->
-    <div>
-        <label>Descricao:</label>
-        <InputTextArea @bind-Value="personagem.Descricao" />
-    </div>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                
+                <div class="mb-3 row">
+                    <div class="form-floating col p-1">
 
-    <!-- Habilidades -->
+                        <InputText class="form-control" id="floatingName" placeholder="Nome" @bind-Value="personagem.Nome"/>
+                        <label class="form-label" for="floatingName">Nome</label>
+                    </div>
+                    <div class=" form-floating col-md p-1">
 
-    <!-- Força -->
-    <div>
-        <label>For:</label>
-        <InputNumber @bind-Value="_habilidades.Forca" />
-    </div>
-    <!-- Destreza -->
-    <div>
-        <label>Des:</label>
-        <InputNumber @bind-Value="_habilidades.Destreza" />
-    </div>
-    <!-- Carisma -->
-    <div>
-        <label>Car:</label>
-        <InputNumber @bind-Value="_habilidades.Carisma" />
-    </div> 
-    <!-- Constituição -->
-    <div>
-        <label>Con:</label>
-        <InputNumber @bind-Value="_habilidades.Constituicao" />
-    </div>    
-    <!-- Inteligencia -->
-    <div>
-        <label>Int:</label>
-        <InputNumber @bind-Value="_habilidades.Inteligencia" />
-    </div>
-    <!-- Sabedoria -->
-    <div>
-        <label>Sab:</label>
-        <InputNumber @bind-Value="_habilidades.Sabedoria" />
-    </div>
+                        <InputNumber class="form-control" id="floatingNivel" placeholder="Nível" @bind-Value="personagem.Nivel"/>
+                        <label class="form-label" for="floatingNivel">Nível</label>
+                        
+                    </div>
 
-    <button type="submit">Salvar Personagem</button>
+                </div>
+                
+                <div class="mb-3 input-group">
+                    <span class="input-group-text">Pv</span>
+                    <InputNumber class="form-control" placeholder="Pv" aria-label="Pv" @bind-Value="personagem.Pv"/>
+                    <span class="input-group-text">Armadura</span>
+                    <InputNumber class="form-control" placeholder="Armadura" aria-label="Armadura" @bind-Value="personagem.Armadura"/>
+                    <span class="input-group-text">Dano:</span>
+                    <InputNumber class="form-control" @bind-Value="personagem.DadoDano"/>
+                </div>
 
+                
+            </div>
+            
+            
+            <div class="col-sm-3">
+               
+                <h5>Habilidades</h5>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text" >For:</span>
+                    <InputNumber class="form-control" @bind-Value="_habilidades.Forca" style="appearance: textfield;" />
+                    <span class="input-group-text">Des:</span>
+                    <InputNumber class="form-control" @bind-Value="_habilidades.Destreza" style="appearance: textfield;" />
+                    <span class="input-group-text">Car:</span>
+                    <InputNumber class="form-control" @bind-Value="_habilidades.Carisma"  style="appearance: textfield;"/>
+                </div>
+                
+                <div class="mb-3 input-group">
+
+                    <span class="input-group-text">Con:</span>
+                    <InputNumber class="form-control" @bind-Value="_habilidades.Constituicao" style="appearance: textfield;" />
+                    <span class="input-group-text">Int:</span>
+                    <InputNumber class="form-control" @bind-Value="_habilidades.Inteligencia" style="appearance: textfield;" />
+                    <span class="input-group-text">Sab:</span>
+                    <InputNumber class="form-control" @bind-Value="_habilidades.Sabedoria" style="appearance: textfield;" />
+                </div>
+
+               
+
+            </div> <!-- Primeira Linha -->
+            
+            <div class="row mb-3">
+                
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Descrição:</label>
+                    <InputTextArea class="form-control" style="height: 20rem" @bind-Value="_descricao" />
+                </div>
+                
+                <div class="mb-3 col-md-6">
+                    <div class="mb-2">Preview</div>
+                    
+                    <div class="card " style="min-height: 20rem">
+                        <div class="card-body">
+
+
+                            @Descricao
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Salvar Personagem</button>
+    </div>
 </EditForm>
+
+
 
 @code {
     
     private Personagem personagem = new ();
-    private string message = string.Empty;
+    private string? _descricao = string.Empty;
+
+    private string _descricaoPlaceholder = @"Markdown é um jeito facil de escrever HTML
+
+Veja o [guia](https://www.markdownguide.org/cheat-sheet/)   
+
+---
+
+é possível escrever código:
+
+```js
+var a = 123;
+console.log(a);
+```
+
+É fácil escrever seus itens em uma lista, por exemplo
+
+- item 1
+- item 2
+- item 3
+                         ";
+    public MarkupString  Descricao
+    {
+        get => new MarkupString( Markdig.Markdown.ToHtml(string.IsNullOrWhiteSpace(_descricao)? _descricaoPlaceholder : _descricao));
+    }
+   
     private Habilidade _habilidades = new();
 
     private async Task HandleValidSubmit()
     {
+        personagem.Descricao = _descricao;
         personagem.Habilidade = _habilidades;
         await PersonagemService.AdicionarPersonagem(personagem);
         Navigation.NavigateTo("/"); // Redireciona para a página inicial
