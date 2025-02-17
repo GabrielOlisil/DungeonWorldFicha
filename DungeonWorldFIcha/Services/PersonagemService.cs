@@ -24,4 +24,17 @@ public class PersonagemService
         _context.Personages.Add(personagem);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Personagem> GetPersonagemById(Guid id)
+    {
+        var personagem = await _context.Personages.Include(a => a.Habilidade)
+            .FirstOrDefaultAsync(p => p.PersonagemId == id);
+
+        if (personagem is null)
+        {
+            throw new KeyNotFoundException($"Personagem com o id {id} não encontrado.");
+        }
+
+        return personagem;
+    }
 }

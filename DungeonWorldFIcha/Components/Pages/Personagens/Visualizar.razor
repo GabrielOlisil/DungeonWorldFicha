@@ -1,0 +1,118 @@
+@page "/Personagens/{id:guid}"
+@using DungeonWorldFIcha.Models
+@using DungeonWorldFIcha.Services
+@inject PersonagemService PersonagemService
+@inject NavigationManager Navigation
+@inject MarkdownService MarkdownService
+@rendermode InteractiveServer
+
+
+<PageTitle>Visualizar Personagem</PageTitle>
+
+<h3>Visualizar Personagem</h3>
+
+@if (personagem == null)
+{
+    <p>Carregando personagem...</p>
+}
+else
+{
+    
+    <EditForm Model="@personagem">
+        <DataAnnotationsValidator/>
+
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6">
+
+                    <div class="mb-3 row">
+                        <div class="form-floating col p-1">
+                            <InputText class="form-control" id="floatingName" placeholder="Nome" @bind-Value="personagem.Nome" Disabled="true"/>
+                            <label class="form-label" for="floatingName">Nome</label>
+                        </div>
+                        <div class="form-floating col-md p-1">
+                            <InputNumber class="form-control" id="floatingNivel" placeholder="Nível" @bind-Value="personagem.Nivel" Disabled="true"/>
+                            <label class="form-label" for="floatingNivel">Nível</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text">Pv</span>
+                        <InputNumber class="form-control" placeholder="Pv" aria-label="Pv" @bind-Value="personagem.Pv" Disabled="true"/>
+                        <span class="input-group-text">Armadura</span>
+                        <InputNumber class="form-control" placeholder="Armadura" aria-label="Armadura" @bind-Value="personagem.Armadura" Disabled="true"/>
+                        <span class="input-group-text">Dano</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.DadoDano" Disabled="true"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <h5>Habilidades</h5>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text">For:</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Forca" Disabled="true" style="appearance: textfield;"/>
+                        <span class="input-group-text">Des:</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Destreza" Disabled="true" style="appearance: textfield;"/>
+                        <span class="input-group-text">Car:</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Carisma" Disabled="true" style="appearance: textfield;"/>
+                    </div>
+
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text">Con:</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Constituicao" Disabled="true" style="appearance: textfield;"/>
+                        <span class="input-group-text">Int:</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Inteligencia" Disabled="true" style="appearance: textfield;"/>
+                        <span class="input-group-text">Sab:</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Sabedoria" Disabled="true" style="appearance: textfield;"/>
+                    </div>
+                </div> <!-- Primeira Linha -->
+
+                <div class="row mb-3">
+                  <div class="mb-3 container-fluid">
+                        <div class="mb-2">Descrição</div>
+                        <div class="card" style="min-height: 20rem">
+                            <div class="card-body">
+                                @Descricao
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </EditForm>
+
+}
+
+@code {
+    [Parameter]
+    public Guid id { get; set; }
+    private Personagem? personagem = null;
+
+    public MarkupString Descricao
+    {
+        get => new MarkupString(MarkdownService.ConvertToHtml(personagem?.Descricao ?? string.Empty));
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            personagem = await PersonagemService.GetPersonagemById(id);
+            if (personagem == null)
+            {
+                // Caso o personagem não seja encontrado
+                Navigation.NavigateTo("/Personagens");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Tratamento de erro, por exemplo, se houver falha na requisição
+            Console.WriteLine($"Erro ao carregar personagem: {ex.Message}");
+            Navigation.NavigateTo("/Personagens");
+        }
+    }
+
+
+}

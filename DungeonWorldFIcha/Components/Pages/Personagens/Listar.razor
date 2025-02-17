@@ -1,0 +1,60 @@
+@page "/Personagens/"
+@using DungeonWorldFIcha.Models
+@using DungeonWorldFIcha.Services
+@inject NavigationManager Navigation
+@inject PersonagemService PersonagemService
+@rendermode InteractiveServer
+
+@if (_personagens == null)
+{
+    <p>Carregando personagens...</p>
+}
+else if (!_personagens.Any())
+{
+    <p>Nenhum personagem encontrado.</p>
+}
+else
+{
+    <div @onclick="HandleCreate" class="btn btn-success mb-3" >Adicionar</div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
+        @foreach (var personagem in _personagens)
+        {
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div></div>
+                    <div class="card-body">
+                        <h5 class="card-title">@personagem.Nome</h5>
+                        <p class="card-text">
+                            <strong>Nível:</strong> @personagem.Nivel <br/>
+                            <strong>Pv:</strong> @personagem.Pv <br/>
+                            <strong>Armadura:</strong> @personagem.Armadura
+                        </p>
+                        <button class="btn btn-primary" @onclick="() => HandleClick(personagem.PersonagemId)">Visualizar</button>
+                        <button class="btn btn-danger">Remover</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+@code {
+    
+    private List<Personagem>? _personagens;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _personagens = await PersonagemService.GetPersonagens();
+    }
+
+    private void HandleClick(Guid Id)
+    {
+        Navigation.NavigateTo($"/Personagens/{Id}");
+    }
+
+    private void HandleCreate()
+    {
+        Navigation.NavigateTo($"/personagens/novo");
+
+    }
+}
