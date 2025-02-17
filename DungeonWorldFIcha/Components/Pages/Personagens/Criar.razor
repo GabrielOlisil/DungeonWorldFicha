@@ -1,0 +1,98 @@
+@page "/Personagem/Criar"
+@using DungeonWorldFIcha.Models
+@using DungeonWorldFIcha.Services
+@inject PersonagemService PersonagemService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+
+<PageTitle>Novo</PageTitle>
+
+<h3>Criar</h3>
+
+<EditForm Model="@personagem" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator/>
+
+    <!-- Nome do Personagem -->
+    <div>
+        <label>Nome:</label>
+        <InputText @bind-Value="personagem.Nome" />
+    </div>
+    <!-- PVs -->
+    <div>
+        <label>Pv:</label>
+        <InputNumber @bind-Value="personagem.Pv" />
+    </div>
+    <!-- Armadura -->
+    <div>
+        <label>Armadura:</label>
+        <InputNumber @bind-Value="personagem.Armadura" />
+    </div>
+    <!-- Dano -->
+    <div>
+        <label>Dano:</label>
+        <InputNumber @bind-Value="personagem.DadoDano" />
+    </div>
+    <!-- Nível -->
+    <div>
+        <label>Nível:</label>
+        <InputNumber @bind-Value="personagem.Nivel" />
+    </div>
+    <!-- Descricao -->
+    <div>
+        <label>Descricao:</label>
+        <InputTextArea @bind-Value="personagem.Descricao" />
+    </div>
+
+    <!-- Habilidades -->
+
+    <!-- Força -->
+    <div>
+        <label>For:</label>
+        <InputNumber @bind-Value="_habilidades.Forca" />
+    </div>
+    <!-- Destreza -->
+    <div>
+        <label>Des:</label>
+        <InputNumber @bind-Value="_habilidades.Destreza" />
+    </div>
+    <!-- Carisma -->
+    <div>
+        <label>Car:</label>
+        <InputNumber @bind-Value="_habilidades.Carisma" />
+    </div> 
+    <!-- Constituição -->
+    <div>
+        <label>Con:</label>
+        <InputNumber @bind-Value="_habilidades.Constituicao" />
+    </div>    
+    <!-- Inteligencia -->
+    <div>
+        <label>Int:</label>
+        <InputNumber @bind-Value="_habilidades.Inteligencia" />
+    </div>
+    <!-- Sabedoria -->
+    <div>
+        <label>Sab:</label>
+        <InputNumber @bind-Value="_habilidades.Sabedoria" />
+    </div>
+
+    <button type="submit">Salvar Personagem</button>
+
+</EditForm>
+
+@code {
+    
+    private Personagem personagem = new ();
+    private string message = string.Empty;
+    private Habilidade _habilidades = new();
+
+    private async Task HandleValidSubmit()
+    {
+        personagem.Habilidade = _habilidades;
+        await PersonagemService.AdicionarPersonagem(personagem);
+        Navigation.NavigateTo("/"); // Redireciona para a página inicial
+    }
+
+    
+}
