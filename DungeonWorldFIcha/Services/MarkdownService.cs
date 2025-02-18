@@ -16,6 +16,10 @@ public class MarkdownService
 
     public string ConvertToHtml(string markdown)
     {
+        if (markdown is null)
+        {
+            return string.Empty;
+        }
         return Markdown.ToHtml(markdown, _pipeline);
     }  
 }

@@ -16,24 +16,41 @@ public class PersonagemService
 
     public async Task<List<Personagem>> GetPersonagens()
     {
-        return await _context.Personages.Include(p => p.Habilidade).ToListAsync();
+        List<Personagem> list;
+         list =  await _context.Personages.Include(p => p.Habilidade).ToListAsync();
+         return list;
     }
 
-    public async Task AdicionarPersonagem(Personagem personagem)
+    public async Task<bool> AdicionarPersonagem(Personagem personagem)
     {
         _context.Personages.Add(personagem);
-        await _context.SaveChangesAsync();
+        return await _context.SaveChangesAsync() > 0;
+    }
+    public async Task AtualizarPersonagem(Personagem personagem)
+    {
+        try
+        {
+            _context.Personages.Update(personagem);
+            await _context.SaveChangesAsync();
+
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentException("Erro ao Atualizar Personagem\n" + e.StackTrace);
+        }
     }
 
     public async Task<Personagem> GetPersonagemById(Guid id)
     {
-        var personagem = await _context.Personages.Include(a => a.Habilidade)
+        Personagem? personagem = null;
+        personagem = await _context.Personages.Include(a => a.Habilidade)
             .FirstOrDefaultAsync(p => p.PersonagemId == id);
 
         if (personagem is null)
         {
             throw new KeyNotFoundException($"Personagem com o id {id} não encontrado.");
         }
+
 
         return personagem;
     }

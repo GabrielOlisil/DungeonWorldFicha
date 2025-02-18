@@ -1,14 +1,13 @@
-@page "/Personagens/novo"
+@page "/Personagens/novo/{id:guid?}"
 @using DungeonWorldFIcha.Models
 @using DungeonWorldFIcha.Services
 @inject PersonagemService PersonagemService
 @inject NavigationManager Navigation
-@inject MarkdownService MarkdownService
 
 @rendermode InteractiveServer
 
 
-<PageTitle>Novo Personagem</PageTitle>
+<PageTitle>Personagem</PageTitle>
 
 <h3 class="mb-4 text-center">Criar Personagem</h3>
 
@@ -125,12 +124,27 @@
 </EditForm>
 
 @code {
+    [Parameter] public Guid? Id { get; set; }
+
     private Personagem personagem = new() { Habilidade = new Habilidade() };
 
-    
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            personagem = await PersonagemService.GetPersonagemById(Id.Value);
+        }
+    }
 
     private async Task HandleValidSubmit()
     {
+        if (Id.HasValue)
+        {
+            await PersonagemService.AtualizarPersonagem(personagem);
+            Navigation.NavigateTo($"/personagens/{Id}");
+            return;
+        }
+        
         await PersonagemService.AdicionarPersonagem(personagem);
         Navigation.NavigateTo("/personagens"); // Redireciona para a página inicial
     }

@@ -9,7 +9,7 @@
 
 <PageTitle>Visualizar Personagem</PageTitle>
 
-<h3>Visualizar Personagem</h3>
+<h3 class="mb-4 text-center">Personagem</h3>
 
 @if (personagem == null)
 {
@@ -17,9 +17,12 @@
 }
 else
 {
- 
 
-        <div class="container mt-4">
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-end">
+            <button @onclick="HandleEdit" class="btn btn-secondary mt-3 mb-5">Editar</button>
+            </div>
 
             <!-- Seção: Nome, Raça e Classe com Floating Labels -->
             <div class="row g-3 mb-3">
@@ -138,24 +141,21 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
+        
             personagem = await PersonagemService.GetPersonagemById(id);
-            if (personagem == null)
-            {
-                // Caso o personagem não seja encontrado
-                Navigation.NavigateTo("/Personagens");
-            }
+           
 
             _equipamentoDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.Equipamento));
             _descUmDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.DescricaoUm));
 
             _descDoisDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.DescricaoDois));
-        }
-        catch (Exception ex)
-        {
-            Navigation.NavigateTo("/Personagens");
-        }
+        
+      
+    }
+
+    private void HandleEdit()
+    {
+        Navigation.NavigateTo($"personagens/novo/{id}");
     }
 }
 
