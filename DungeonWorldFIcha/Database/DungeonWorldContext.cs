@@ -8,7 +8,6 @@ public class DungeonWorldContext(IConfiguration configuration) : DbContext
 {
     public DbSet<Personagem> Personages { get; set; }
     public DbSet<Habilidade> Habilidades { get; set; }
-    public DbSet<Movimento> Movimentos { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

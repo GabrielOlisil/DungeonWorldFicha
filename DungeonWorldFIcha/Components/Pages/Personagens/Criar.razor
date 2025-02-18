@@ -8,160 +8,130 @@
 @rendermode InteractiveServer
 
 
-<PageTitle>Novo</PageTitle>
+<PageTitle>Novo Personagem</PageTitle>
 
-<h3 class="mb-3">Criar</h3>
-
+<h3 class="mb-4 text-center">Criar Personagem</h3>
 
 <EditForm Model="@personagem" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
+    <DataAnnotationsValidator/>
+
+   
 
     <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                
-                <div class="mb-3 row">
-                    <div class="form-floating col p-1">
-
-                        <InputText class="form-control" id="floatingName" placeholder="Nome" @bind-Value="personagem.Nome"/>
-                        <label class="form-label" for="floatingName">Nome</label>
-                    </div>
-                    <div class=" form-floating col-md p-1">
-
-                        <InputNumber class="form-control" id="floatingNivel" placeholder="Nível" @bind-Value="personagem.Nivel"/>
-                        <label class="form-label" for="floatingNivel">Nível</label>
-                        
-                    </div>
-
-                </div>
-                
-                <div class="mb-3 input-group">
-                    <span class="input-group-text">Pv</span>
-                    <InputNumber class="form-control" placeholder="Pv" aria-label="Pv" @bind-Value="personagem.Pv"/>
-                    <span class="input-group-text">Armadura</span>
-                    <InputNumber class="form-control" placeholder="Armadura" aria-label="Armadura" @bind-Value="personagem.Armadura"/>
-                    <span class="input-group-text">Dano:</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.DadoDano"/>
-                </div>
-
-                
-            </div>
-            
-            
-            <div class="col-sm-3">
-               
-                <h5>Habilidades</h5>
-                <div class="mb-3 input-group">
-                    <span class="input-group-text" >For:</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Forca" style="appearance: textfield;" />
-                    <span class="input-group-text">Des:</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Destreza" style="appearance: textfield;" />
-                    <span class="input-group-text">Car:</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Carisma"  style="appearance: textfield;"/>
-                </div>
-                
-                <div class="mb-3 input-group">
-
-                    <span class="input-group-text">Con:</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Constituicao" style="appearance: textfield;" />
-                    <span class="input-group-text">Int:</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Inteligencia" style="appearance: textfield;" />
-                    <span class="input-group-text">Sab:</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Sabedoria" style="appearance: textfield;" />
-                </div>
-
-               
-
-            </div> <!-- Primeira Linha -->
-            
-            <div class="row mb-3">
-                
-                <div class="mb-3 col-md-6">
-                    <label class="form-label">Descrição:</label>
-                    <InputTextArea class="form-control" style="height: 20rem" @bind-Value="_descricao" @oninput="AtualizarDescricao" />
-                </div>
-                
-                <div class="mb-3 col-md-6">
-                    <div class="mb-2">Preview</div>
-                    
-                    <div class="card " style="min-height: 20rem">
-                        <div class="card-body">
-
-
-                            @Descricao
-                        </div>
-
-
-                    </div>
-
-                </div>
-            </div>
-            
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-success mt-3 mb-5">Salvar Personagem</button>
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Salvar Personagem</button>
+
+        <!-- Seção: Nome, Raça e Classe com Floating Labels -->
+        <div class="row g-3 mb-3">
+            <!-- Nome -->
+            <div class="col-2">
+                <div class="form-floating">
+                    <InputText class="form-control" id="fieldName" placeholder="Nome"  @bind-Value="personagem.Nome"/>
+                    <label for="fieldName" >Nome</label>
+                </div>
+            </div>
+
+      
+
+            <!-- Classe -->
+            <div class="col-2">
+                <div class="form-floating">
+                    <InputText class="form-control" placeholder id="fieldClasse" @bind-Value="personagem.Classe"/>
+                    <label for="fieldClasse" >Classe</label>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-floating">
+                    <InputNumber class="form-control" placeholder id="fieldNivel" @bind-Value="personagem.Nivel"/>
+                    <label for="fieldNivel" class="fs-5">Nível</label>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="input-group mb-1">
+                    <span class="input-group-text bg-black text-white">PV</span>
+                    <InputNumber class="form-control" @bind-Value="personagem.Pv" />
+                    <span class="input-group-text bg-black text-white">ARM</span>
+                    <InputNumber class="form-control" @bind-Value="personagem.Armadura" />
+                    <span class="input-group-text bg-black text-white">DANO</span>
+                    <InputNumber class="form-control" @bind-Value="personagem.DadoDano" />
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Seção: Habilidades com Input Group -->
+        <div class="mb-4 mt-3">
+            <h5>Habilidades</h5>
+           
+        </div>
+
+        <!-- Seção: Atributos e Equipamento lado a lado -->
+        <div class="row">
+
+
+            <div class="col-sm-3">
+                    <div class="input-group mb-1">
+                        <span class="input-group-text bg-black text-white">FOR</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Forca" />
+                    </div>
+                    <div class="input-group mb-1">
+                        <span class="input-group-text bg-black text-white">DES</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Destreza" />
+                    </div>
+                    <div class="input-group mb-1">
+                        <span class="input-group-text bg-black text-white">CAR</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Carisma" />
+                    </div>
+                    <div class="input-group mb-1">
+                        <span class="input-group-text bg-black text-white">CON</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Constituicao" />
+                    </div>
+                    <div class="input-group mb-1">
+                        <span class="input-group-text bg-black text-white">INT</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Inteligencia" />
+                    </div>
+                    <div class="input-group mb-1">
+                        <span class="input-group-text bg-black text-white">SAB</span>
+                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Sabedoria" />
+                    </div>
+            </div>
+            <div class="col-sm-9">
+                <h5 class="bg-dark text-white p-1">Equipamento</h5>
+                <InputTextArea class="form-control-plaintext p-1" placeholder="Digite aqui" style="height: 15rem; box-shadow: none"  @bind-Value="personagem.Equipamento"/>
+            </div>
+        </div>
+
+        <!-- Seção: Aparência e Vínculos -->
+
+        <h5 class="bg-dark text-white p-1 mt-4">Informacoes</h5>
+
+        <!-- Seção: Movimentos -->
+        <div class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <InputTextArea class="form-control-plaintext" placeholder="Digite aqui" style="height: 20rem" @bind-Value="personagem.DescricaoUm"/>
+                </div>
+                <div class="col-md-6">
+                    <InputTextArea class="form-control-plaintext" placeholder="Digite aqui" style="height: 20rem" @bind-Value="personagem.DescricaoDois"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botão de Submissão -->
+       
     </div>
 </EditForm>
 
-
-
 @code {
-    
-    private Personagem personagem = new ()
-    {
-        Habilidade = new Habilidade()
-    };
-    private string? _descricao = string.Empty;
-    private string? _descricaoDigest = string.Empty;
+    private Personagem personagem = new() { Habilidade = new Habilidade() };
 
     
-    public MarkupString  Descricao
-    {
-
-        get => new MarkupString(MarkdownService.ConvertToHtml(string.IsNullOrWhiteSpace(_descricaoDigest) ? _descricaoPlaceholder : _descricaoDigest));
-        set
-        {
-            _descricaoDigest = value.ToString();
-        }
-    }
-   
-    private Habilidade _habilidades = new();
 
     private async Task HandleValidSubmit()
     {
-        personagem.Descricao = _descricaoDigest;
-        personagem.Habilidade = _habilidades;
         await PersonagemService.AdicionarPersonagem(personagem);
-       Navigation.NavigateTo("/personagens"); // Redireciona para a página inicial
+        Navigation.NavigateTo("/personagens"); // Redireciona para a página inicial
     }
-
-    private void AtualizarDescricao(ChangeEventArgs e)
-    {
-        _descricao = e.Value?.ToString() ?? "";
-        Descricao = new MarkupString(MarkdownService.ConvertToHtml(
-            string.IsNullOrWhiteSpace(_descricao) ? _descricaoPlaceholder : _descricao
-        ));
-    }
-
-
-
-    private string _descricaoPlaceholder = @"Markdown é um jeito facil de escrever HTML
-
-Veja o [guia](https://www.markdownguide.org/cheat-sheet/)   
-
----
-
-é possível escrever código:
-
-```js
-var a = 123;
-console.log(a);
-```
-
-É fácil escrever seus itens em uma lista, por exemplo
-
-- item 1
-- item 2
-- [ ] item 3
-                         ";
-    
 }

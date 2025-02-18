@@ -37,4 +37,10 @@ public class PersonagemService
 
         return personagem;
     }
+
+    public async Task<bool> RemovePersonageById(Guid id)
+    {
+        _context.Personages.Remove(await GetPersonagemById(id));
+        return await _context.SaveChangesAsync() > 0;
+    }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DungeonWorldFIcha.Migrations
 {
     [DbContext(typeof(DungeonWorldContext))]
-    [Migration("20250217132538_InitialCreate")]
+    [Migration("20250218033331_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -54,33 +54,6 @@ namespace DungeonWorldFIcha.Migrations
                     b.ToTable("Habilidades");
                 });
 
-            modelBuilder.Entity("DungeonWorldFIcha.Models.Movimento", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid?>("PersonagemId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Situacoes")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonagemId");
-
-                    b.ToTable("Movimentos");
-                });
-
             modelBuilder.Entity("DungeonWorldFIcha.Models.Personagem", b =>
                 {
                     b.Property<Guid>("PersonagemId")
@@ -90,11 +63,19 @@ namespace DungeonWorldFIcha.Migrations
                     b.Property<int>("Armadura")
                         .HasColumnType("int");
 
+                    b.Property<string>("Classe")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("DadoDano")
                         .HasColumnType("int");
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
+                    b.Property<string>("DescricaoDois")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DescricaoUm")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Equipamento")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Equipamentos")
@@ -120,13 +101,6 @@ namespace DungeonWorldFIcha.Migrations
                     b.ToTable("Personages");
                 });
 
-            modelBuilder.Entity("DungeonWorldFIcha.Models.Movimento", b =>
-                {
-                    b.HasOne("DungeonWorldFIcha.Models.Personagem", null)
-                        .WithMany("Movimentos")
-                        .HasForeignKey("PersonagemId");
-                });
-
             modelBuilder.Entity("DungeonWorldFIcha.Models.Personagem", b =>
                 {
                     b.HasOne("DungeonWorldFIcha.Models.Habilidade", "Habilidade")
@@ -136,11 +110,6 @@ namespace DungeonWorldFIcha.Migrations
                         .IsRequired();
 
                     b.Navigation("Habilidade");
-                });
-
-            modelBuilder.Entity("DungeonWorldFIcha.Models.Personagem", b =>
-                {
-                    b.Navigation("Movimentos");
                 });
 #pragma warning restore 612, 618
         }

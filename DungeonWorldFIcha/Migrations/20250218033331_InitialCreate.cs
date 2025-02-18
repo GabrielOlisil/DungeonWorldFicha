@@ -43,9 +43,15 @@ namespace DungeonWorldFIcha.Migrations
                     Armadura = table.Column<int>(type: "int", nullable: false),
                     DadoDano = table.Column<int>(type: "int", nullable: false),
                     Nivel = table.Column<int>(type: "int", nullable: false),
-                    Equipamentos = table.Column<string>(type: "longtext", nullable: true)
+                    Classe = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descricao = table.Column<string>(type: "longtext", nullable: false)
+                    DescricaoUm = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Equipamento = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DescricaoDois = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Equipamentos = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     HabilidadeId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
@@ -61,35 +67,6 @@ namespace DungeonWorldFIcha.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "Movimentos",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nome = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descricao = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Situacoes = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PersonagemId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Movimentos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Movimentos_Personages_PersonagemId",
-                        column: x => x.PersonagemId,
-                        principalTable: "Personages",
-                        principalColumn: "PersonagemId");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Movimentos_PersonagemId",
-                table: "Movimentos",
-                column: "PersonagemId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Personages_HabilidadeId",
                 table: "Personages",
@@ -99,9 +76,6 @@ namespace DungeonWorldFIcha.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Movimentos");
-
             migrationBuilder.DropTable(
                 name: "Personages");
 

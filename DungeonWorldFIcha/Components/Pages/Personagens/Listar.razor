@@ -5,6 +5,11 @@
 @inject PersonagemService PersonagemService
 @rendermode InteractiveServer
 
+
+
+<div @onclick="HandleCreate" class="btn btn-success mb-3" >Adicionar</div>
+
+
 @if (_personagens == null)
 {
     <p>Carregando personagens...</p>
@@ -15,7 +20,6 @@ else if (!_personagens.Any())
 }
 else
 {
-    <div @onclick="HandleCreate" class="btn btn-success mb-3" >Adicionar</div>
 
     <div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
         @foreach (var personagem in _personagens)
@@ -31,7 +35,7 @@ else
                             <strong>Armadura:</strong> @personagem.Armadura
                         </p>
                         <button class="btn btn-primary" @onclick="() => HandleClick(personagem.PersonagemId)">Visualizar</button>
-                        <button class="btn btn-danger">Remover</button>
+                        <button class="btn btn-danger" @onclick="() => HandleDelete(personagem.PersonagemId) ">Remover</button>
                     </div>
                 </div>
             </div>
@@ -56,5 +60,13 @@ else
     {
         Navigation.NavigateTo($"/personagens/novo");
 
+    }
+
+    private async Task HandleDelete(Guid id)
+    {
+        if (await PersonagemService.RemovePersonageById(id))
+        {
+            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        }
     }
 }
