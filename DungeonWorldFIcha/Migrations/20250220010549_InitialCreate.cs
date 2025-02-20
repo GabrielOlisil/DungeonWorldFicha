@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -18,7 +18,8 @@ namespace DungeonWorldFIcha.Migrations
                 name: "Habilidades",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Forca = table.Column<int>(type: "int", nullable: false),
                     Destreza = table.Column<int>(type: "int", nullable: false),
                     Constituicao = table.Column<int>(type: "int", nullable: false),
@@ -33,17 +34,20 @@ namespace DungeonWorldFIcha.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Personages",
+                name: "Personagens",
                 columns: table => new
                 {
-                    PersonagemId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nome = table.Column<string>(type: "longtext", nullable: false)
+                    PersonagemId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ImageUrl = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Pv = table.Column<int>(type: "int", nullable: false),
                     Armadura = table.Column<int>(type: "int", nullable: false),
                     DadoDano = table.Column<int>(type: "int", nullable: false),
                     Nivel = table.Column<int>(type: "int", nullable: false),
-                    Classe = table.Column<string>(type: "longtext", nullable: true)
+                    Classe = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DescricaoUm = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -51,15 +55,13 @@ namespace DungeonWorldFIcha.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DescricaoDois = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Equipamentos = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    HabilidadeId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    HabilidadeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Personages", x => x.PersonagemId);
+                    table.PrimaryKey("PK_Personagens", x => x.PersonagemId);
                     table.ForeignKey(
-                        name: "FK_Personages_Habilidades_HabilidadeId",
+                        name: "FK_Personagens_Habilidades_HabilidadeId",
                         column: x => x.HabilidadeId,
                         principalTable: "Habilidades",
                         principalColumn: "Id",
@@ -68,8 +70,8 @@ namespace DungeonWorldFIcha.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Personages_HabilidadeId",
-                table: "Personages",
+                name: "IX_Personagens_HabilidadeId",
+                table: "Personagens",
                 column: "HabilidadeId");
         }
 
@@ -77,7 +79,7 @@ namespace DungeonWorldFIcha.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Personages");
+                name: "Personagens");
 
             migrationBuilder.DropTable(
                 name: "Habilidades");

@@ -1,9 +1,17 @@
-@page "/Personagens/{id:guid}"
+@page "/Personagens/{id:int}"
 @using DungeonWorldFIcha.Models
 @using DungeonWorldFIcha.Services
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.AspNetCore.SignalR
+@using DungeonWorldFIcha.Hubs
+@using Dice;
 @inject PersonagemService PersonagemService
 @inject NavigationManager Navigation
+@inject IHubContext<DadosHub> HubContext
 @inject MarkdownService MarkdownService
+@inject RollCountService RollCountService
+
+
 @rendermode InteractiveServer
 
 
@@ -17,145 +25,245 @@
 }
 else
 {
-
-
     <div class="container mt-4">
         <div class="d-flex justify-content-end">
             <button @onclick="HandleEdit" class="btn btn-secondary mt-3 mb-5">Editar</button>
+        </div>
+
+        <!-- Seção: Nome, Raça e Classe com Floating Labels -->
+        <div class="row g-3 mb-3">
+            <!-- Nome -->
+            <div class="col-6">
+                <img src="@personagem.ImageUrl" width="400rem" alt="player image">
             </div>
 
-            <!-- Seção: Nome, Raça e Classe com Floating Labels -->
-            <div class="row g-3 mb-3">
-                <!-- Nome -->
-                <div class="col-2">
-                    <div class="form-floating">
-                        <InputText class="form-control" id="fieldName" readonly  placeholder="Nome"
-                                   @bind-Value="personagem.Nome"/>
-                        <label for="fieldName">Nome</label>
+            <div class="col-6">
+
+                <div class="row g-2 mb-3">
+
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <InputText class="form-control" id="fieldName" readonly placeholder="Nome"
+                                       @bind-Value="personagem.Nome"/>
+                            <label for="fieldName">Nome</label>
+                        </div>
+                    </div>
+                    <!-- Classe -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <InputText class="form-control" placeholder id="fieldClasse" readonly
+                                       @bind-Value="personagem.Classe"/>
+                            <label for="fieldClasse">Classe</label>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <InputNumber class="form-control" placeholder id="fieldNivel" readonly
+                                         @bind-Value="personagem.Nivel"/>
+                            <label for="fieldNivel" class="fs-5">Nível</label>
+                        </div>
                     </div>
                 </div>
 
-
-                <!-- Classe -->
-                <div class="col-2">
-                    <div class="form-floating">
-                        <InputText class="form-control" placeholder id="fieldClasse" readonly  @bind-Value="personagem.Classe"/>
-                        <label for="fieldClasse">Classe</label>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-floating">
-                        <InputNumber class="form-control" placeholder id="fieldNivel" readonly  @bind-Value="personagem.Nivel"/>
-                        <label for="fieldNivel" class="fs-5">Nível</label>
-                    </div>
-                </div>
-
-                <div class="col-6">
+                <div class="row">
                     <div class="input-group mb-1">
                         <span class="input-group-text bg-black text-white">PV</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.Pv"/>
+                        <InputNumber class="form-control" readonly @bind-Value="personagem.Pv"/>
                         <span class="input-group-text bg-black text-white">ARM</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.Armadura"/>
+                        <InputNumber class="form-control" readonly @bind-Value="personagem.Armadura"/>
                         <span class="input-group-text bg-black text-white">DANO</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.DadoDano"/>
+                        <InputNumber class="form-control" readonly @bind-Value="personagem.DadoDano"/>
                     </div>
                 </div>
-            </div>
 
-
-            <!-- Seção: Habilidades com Input Group -->
-            <div class="mb-4 mt-3">
-                <h5>Habilidades</h5>
 
             </div>
-
-            <!-- Seção: Atributos e Equipamento lado a lado -->
-            <div class="row">
+        </div>
 
 
-                <div class="col-sm-3">
-                    <div class="input-group mb-1">
-                        <span class="input-group-text bg-black text-white">FOR</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.Habilidade.Forca"/>
-                    </div>
-                    <div class="input-group mb-1">
-                        <span class="input-group-text bg-black text-white">DES</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.Habilidade.Destreza"/>
-                    </div>
-                    <div class="input-group mb-1">
-                        <span class="input-group-text bg-black text-white">CAR</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.Habilidade.Carisma"/>
-                    </div>
-                    <div class="input-group mb-1">
-                        <span class="input-group-text bg-black text-white">CON</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.Habilidade.Constituicao"/>
-                    </div>
-                    <div class="input-group mb-1">
-                        <span class="input-group-text bg-black text-white">INT</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.Habilidade.Inteligencia"/>
-                    </div>
-                    <div class="input-group mb-1">
-                        <span class="input-group-text bg-black text-white">SAB</span>
-                        <InputNumber class="form-control" readonly  @bind-Value="personagem.Habilidade.Sabedoria"/>
-                    </div>
-                </div>
-                <div class="col-sm-9">
-                    <h5 class="bg-dark text-white p-1">Equipamento</h5>
-                    <div class="card p-3">
-                        @_equipamentoDigest
-                    </div>
-                </div>
-            </div>
-
-            <!-- Seção: Aparência e Vínculos -->
-
-            <h5 class="bg-dark text-white p-1 mt-4">Informacoes</h5>
-
-            <!-- Seção: Movimentos -->
-            <div class="mb-4">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="card p-3">
-                            @_descUmDigest
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card p-3">
-                            @_descDoisDigest
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Seção: Habilidades com Input Group -->
+        <div class="mb-4 mt-3">
+            <h5>Habilidades</h5>
 
         </div>
+
+        <!-- Seção: Atributos e Equipamento lado a lado -->
+        <div class="row">
+
+
+            <div class="col-sm-3">
+                <div class="input-group mb-1">
+                    <span class="input-group-text bg-black text-white">FOR</span>
+                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Forca"/>
+                </div>
+                <div class="input-group mb-1">
+                    <span class="input-group-text bg-black text-white">DES</span>
+                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Destreza"/>
+                </div>
+                <div class="input-group mb-1">
+                    <span class="input-group-text bg-black text-white">CAR</span>
+                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Carisma"/>
+                </div>
+                <div class="input-group mb-1">
+                    <span class="input-group-text bg-black text-white">CON</span>
+                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Constituicao"/>
+                </div>
+                <div class="input-group mb-1">
+                    <span class="input-group-text bg-black text-white">INT</span>
+                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Inteligencia"/>
+                </div>
+                <div class="input-group mb-1">
+                    <span class="input-group-text bg-black text-white">SAB</span>
+                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Sabedoria"/>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <h5 class="bg-dark text-white p-1">Equipamento</h5>
+                <div class="card p-3">
+                    @_equipamentoDigest
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Aparência e Vínculos -->
+
+        <h5 class="bg-dark text-white p-1 mt-4">Informacoes</h5>
+
+        <!-- Seção: Movimentos -->
+        <div class="mb-4" >
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card p-3">
+                        @_descUmDigest
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-3">
+                        @_descDoisDigest
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <H5 class="mb-3">Rolagem de Dados</H5>
+        
+        <!-- DADOS -->
+
+        <div class="container-fluid mb-5">
+            <div class="row justify-content-center">
+                <!-- D4 -->
+                <div class="col-3">
+                    <div class="d-flex justify-content-center align-items-center rounded-3" @onclick="() => RollDice(4)" style="width: 100px; height: 100px; background-color: #17a2b8; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                        <span class="text-white fs-2 fw-bold">d4</span>
+                    </div>
+                </div>
+
+                <!-- D6 -->
+                <div class="col-3">
+                    <div class="d-flex justify-content-center align-items-center rounded-3" @onclick="() => RollDice(6)"  style="width: 100px; height: 100px; background-color: #28a745; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                        <span class="text-white fs-2 fw-bold">d6</span>
+                    </div>
+                </div>
+
+                <!-- D8 -->
+                <div class="col-3">
+                    <div class="d-flex justify-content-center align-items-center rounded-3"  @onclick="() => RollDice(8)"  style="width: 100px; height: 100px; background-color: #ffc107; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                        <span class="text-dark fs-2 fw-bold">d8</span>
+                    </div>
+                </div>
+
+                <!-- D10 -->
+                <div class="col-3">
+                    <div class="d-flex justify-content-center align-items-center rounded-3" @onclick="() => RollDice(10)"  style="width: 100px; height: 100px; background-color: #dc3545; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                        <span class="text-white fs-2 fw-bold">d10</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    
+    
+   
 }
 
 @code {
-    [Parameter] public Guid id { get; set; }
+    [Parameter] public int id { get; set; }
     private Personagem? personagem = null;
     private MarkupString? _equipamentoDigest = null;
     private MarkupString? _descUmDigest = null;
     private MarkupString? _descDoisDigest = null;
+    private HubConnection? _hubConnection;
 
 
     protected override async Task OnInitializedAsync()
     {
-        
-            personagem = await PersonagemService.GetPersonagemById(id);
-           
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/personagemHub"))
+            .Build();
 
-            _equipamentoDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.Equipamento));
-            _descUmDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.DescricaoUm));
+        _hubConnection.On<Personagem>("AtualizarFicha", personagemNovo =>
+        {
+            personagem.Nome = personagemNovo.Nome;
+            personagem.Armadura = personagemNovo.Armadura;
+            personagem.Habilidade = personagemNovo.Habilidade;
+            personagem.Equipamento = personagemNovo.Equipamento;
+            personagem.Classe = personagemNovo.Classe;
+            personagem.Nivel = personagemNovo.Nivel;
+            personagem.Pv = personagemNovo.Pv;
+            personagem.DadoDano = personagemNovo.DadoDano;
+            personagem.DescricaoUm = personagemNovo.DescricaoUm;
+            personagem.DescricaoDois = personagemNovo.DescricaoDois;
+            personagem.ImageUrl = personagemNovo.ImageUrl; 
 
-            _descDoisDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.DescricaoDois));
-        
-      
+
+            InvokeAsync(() =>
+            {
+                UpdateHtml();
+                StateHasChanged();
+            });
+
+            Console.WriteLine("call invoke async");
+        });
+        await _hubConnection.StartAsync();
+
+        personagem = await PersonagemService.GetPersonagemById(id);
+        UpdateHtml();
+    }
+
+    private void UpdateHtml()
+    {
+        _equipamentoDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.Equipamento));
+        _descUmDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.DescricaoUm));
+
+        _descDoisDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.DescricaoDois));
     }
 
     private void HandleEdit()
     {
         Navigation.NavigateTo($"personagens/novo/{id}");
     }
+
+
+    private void RollDice(int faces)
+    {
+        var roll = Roller.Roll($"d"+ faces);
+
+        var message = $"{personagem.Nome} rolou:\n{roll}";
+
+        
+        
+        RollCountService.AddRoll(message);
+        HubContext.Clients.All.SendAsync("RolarDado", message);
+
+    }
+    
+    
+    
+
+
 }
 

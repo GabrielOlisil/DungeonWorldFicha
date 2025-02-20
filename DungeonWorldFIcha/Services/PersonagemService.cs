@@ -1,38 +1,60 @@
 using DungeonWorldFIcha.Database;
+using DungeonWorldFIcha.Hubs;
 using DungeonWorldFIcha.Models;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace DungeonWorldFIcha.Services;
 
-
 public class PersonagemService
 {
     private readonly DungeonWorldContext _context;
+    private readonly IHubContext<PersonagemHub> _personagemHub;
 
-    public PersonagemService(DungeonWorldContext context)
+    public PersonagemService(DungeonWorldContext context, IHubContext<PersonagemHub> personagemHub)
     {
         _context = context;
+        _personagemHub = personagemHub;
     }
 
     public async Task<List<Personagem>> GetPersonagens()
     {
         List<Personagem> list;
-         list =  await _context.Personages.Include(p => p.Habilidade).ToListAsync();
-         return list;
+        list = await _context.Personagens.AsNoTracking().Include(p => p.Habilidade).ToListAsync();
+        return list;
     }
 
     public async Task<bool> AdicionarPersonagem(Personagem personagem)
     {
-        _context.Personages.Add(personagem);
+        _context.Personagens.Add(personagem);
         return await _context.SaveChangesAsync() > 0;
     }
+
     public async Task AtualizarPersonagem(Personagem personagem)
     {
         try
         {
-            _context.Personages.Update(personagem);
-            await _context.SaveChangesAsync();
+            _context.Personagens.Update(personagem);
 
+           
+
+
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                _context.Entry(personagem).State = EntityState.Detached;
+
+                _context.Entry(personagem.Habilidade).State = EntityState.Detached;
+                
+                await _personagemHub.Clients.All.SendAsync("AtualizarFicha", personagem);
+                return;
+            }
+            
+            
+                _context.Entry(personagem).State = EntityState.Detached;
+
+                _context.Entry(personagem.Habilidade).State = EntityState.Detached;
+            
+            
         }
         catch (Exception e)
         {
@@ -40,10 +62,10 @@ public class PersonagemService
         }
     }
 
-    public async Task<Personagem> GetPersonagemById(Guid id)
+    public async Task<Personagem> GetPersonagemById(int id)
     {
         Personagem? personagem = null;
-        personagem = await _context.Personages.Include(a => a.Habilidade)
+        personagem = await _context.Personagens.AsNoTracking().Include(a => a.Habilidade)
             .FirstOrDefaultAsync(p => p.PersonagemId == id);
 
         if (personagem is null)
@@ -55,9 +77,9 @@ public class PersonagemService
         return personagem;
     }
 
-    public async Task<bool> RemovePersonageById(Guid id)
+    public async Task<bool> RemovePersonageById(int id)
     {
-        _context.Personages.Remove(await GetPersonagemById(id));
+        _context.Personagens.Remove(await GetPersonagemById(id));
         return await _context.SaveChangesAsync() > 0;
     }
 }

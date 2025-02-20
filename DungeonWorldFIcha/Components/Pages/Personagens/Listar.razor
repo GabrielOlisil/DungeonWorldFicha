@@ -1,6 +1,7 @@
 @page "/Personagens/"
 @using DungeonWorldFIcha.Models
 @using DungeonWorldFIcha.Services
+@using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager Navigation
 @inject PersonagemService PersonagemService
 @rendermode InteractiveServer
@@ -25,17 +26,23 @@ else
         @foreach (var personagem in _personagens)
         {
             <div class="col">
-                <div class="card shadow-sm h-100">
-                    <div></div>
-                    <div class="card-body">
-                        <h5 class="card-title">@personagem.Nome</h5>
-                        <p class="card-text">
-                            <strong>Nível:</strong> @personagem.Nivel <br/>
-                            <strong>Pv:</strong> @personagem.Pv <br/>
-                            <strong>Armadura:</strong> @personagem.Armadura
-                        </p>
-                        <button class="btn btn-primary" @onclick="() => HandleClick(personagem.PersonagemId)">Visualizar</button>
-                        <button class="btn btn-danger" @onclick="() => HandleDelete(personagem.PersonagemId) ">Remover</button>
+                <div class="card shadow-sm h-100 d-flex flex-column">
+                    <div class="overflow-hidden" style="height: 200px;">
+                        <img src="@personagem.ImageUrl" class="card-img-top w-100 h-100 object-fit-cover" alt="img">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">@personagem.Nome</h5>
+                            <p class="card-text">
+                                <strong>Nível:</strong> @personagem.Nivel <br/>
+                                <strong>Pv:</strong> @personagem.Pv <br/>
+                                <strong>Armadura:</strong> @personagem.Armadura
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary w-100 mb-2" @onclick="() => HandleClick(personagem.PersonagemId)">Visualizar</button>
+                            <button class="btn btn-danger w-100" @onclick="() => HandleDelete(personagem.PersonagemId)">Remover</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -45,13 +52,43 @@ else
 @code {
     
     private List<Personagem>? _personagens;
+    private HubConnection? _hubConnection;
     
     protected override async Task OnInitializedAsync()
     {
+        
+        
+        
+        
+        
+        
         _personagens = await PersonagemService.GetPersonagens();
+        
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/personagemHub"))
+            .Build();
+
+        _hubConnection.On<Personagem>("AtualizarFicha", personagemNovo =>
+        {
+            var personagemASerAtualizado = _personagens.Find(p => p.PersonagemId == personagemNovo.PersonagemId);
+
+            personagemASerAtualizado.Nome = personagemNovo.Nome;
+            personagemASerAtualizado.Nivel = personagemNovo.Nivel;
+            personagemASerAtualizado.Pv = personagemNovo.Pv;
+            personagemASerAtualizado.Armadura = personagemNovo.Armadura;
+                
+                
+
+            InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        });
+        await _hubConnection.StartAsync();
+        
     }
 
-    private void HandleClick(Guid Id)
+    private void HandleClick(int Id)
     {
         Navigation.NavigateTo($"/Personagens/{Id}");
     }
@@ -62,7 +99,7 @@ else
 
     }
 
-    private async Task HandleDelete(Guid id)
+    private async Task HandleDelete(int id)
     {
         if (await PersonagemService.RemovePersonageById(id))
         {

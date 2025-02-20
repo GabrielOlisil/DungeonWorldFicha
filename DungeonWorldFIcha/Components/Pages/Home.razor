@@ -1,7 +1,91 @@
 ﻿@page "/"
+@inject NavigationManager Navigation
+@inject RollCountService RollCountService
+@using DungeonWorldFIcha.Services
+@using Microsoft.AspNetCore.SignalR.Client
+
+@rendermode InteractiveServer
+
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+@if (showModal)
+{
+    <div class="modal fade show" tabindex="-1" style="display:block;" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel">Notificação</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@notificationMessage</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
-Welcome to your new app.
+
+@if (_hasRolls)
+{
+    foreach (var rolagem in _rolagens)
+    {
+        <p>@rolagem</p>
+    }
+}
+@code{
+
+    private HubConnection? _hubConnection;
+    private bool showModal { get; set; } = false;
+    private string notificationMessage = "";
+    private bool _hasRolls = false;
+    private string[] _rolagens;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hasRolls = RollCountService.IsQueueNotEmpty();
+        _rolagens = RollCountService.RenderRoll().Split("\n");
+        
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/dadosHub"))
+            .Build();
+
+        _hubConnection.On<string>("RolarDado", (message) =>
+        {
+            // Quando uma mensagem for recebida, mostramos o modal com a mensagem
+            
+            notificationMessage = message;
+            showModal = true;
+            InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        
+            Console.WriteLine("call invoke async");
+
+        });
+
+        await _hubConnection.StartAsync();
+        
+        
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
+}

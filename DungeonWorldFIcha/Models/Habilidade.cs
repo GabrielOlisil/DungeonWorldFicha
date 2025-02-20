@@ -2,7 +2,7 @@ namespace DungeonWorldFIcha.Models;
 
 public class Habilidade
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public int Forca { get; set; }
     public int Destreza { get; set; }
     public int Constituicao { get; set; }

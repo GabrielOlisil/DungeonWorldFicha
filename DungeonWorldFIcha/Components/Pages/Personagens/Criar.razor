@@ -1,4 +1,4 @@
-@page "/Personagens/novo/{id:guid?}"
+@page "/Personagens/novo/{id:int?}"
 @using DungeonWorldFIcha.Models
 @using DungeonWorldFIcha.Services
 @inject PersonagemService PersonagemService
@@ -11,128 +11,150 @@
 
 <h3 class="mb-4 text-center">Criar Personagem</h3>
 
-<EditForm Model="@personagem" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="@_personagem" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator/>
-
-   
+    <ValidationSummary class="alert alert-danger"/>
 
     <div class="container mt-4">
         <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-success mt-3 mb-5">Salvar Personagem</button>
         </div>
 
-        <!-- Seção: Nome, Raça e Classe com Floating Labels -->
+        <!-- Seção: Nome, Classe e Nível -->
         <div class="row g-3 mb-3">
             <!-- Nome -->
             <div class="col-2">
                 <div class="form-floating">
-                    <InputText class="form-control" id="fieldName" placeholder="Nome"  @bind-Value="personagem.Nome"/>
-                    <label for="fieldName" >Nome</label>
+                    <InputText class="form-control" id="fieldName" placeholder="Nome" @bind-Value="_personagem.Nome"/>
+                    <label for="fieldName">Nome</label>
+                    <ValidationMessage For="@(() => _personagem.Nome)" class="text-danger"/>
                 </div>
             </div>
-
-      
 
             <!-- Classe -->
             <div class="col-2">
                 <div class="form-floating">
-                    <InputText class="form-control" placeholder id="fieldClasse" @bind-Value="personagem.Classe"/>
-                    <label for="fieldClasse" >Classe</label>
+                    <InputText class="form-control" id="fieldClasse" placeholder="Classe"
+                               @bind-Value="_personagem.Classe"/>
+                    <label for="fieldClasse">Classe</label>
+                    <ValidationMessage For="@(() => _personagem.Classe)" class="text-danger"/>
                 </div>
             </div>
+
+            <!-- Nível -->
             <div class="col-2">
                 <div class="form-floating">
-                    <InputNumber class="form-control" placeholder id="fieldNivel" @bind-Value="personagem.Nivel"/>
-                    <label for="fieldNivel" class="fs-5">Nível</label>
+                    <InputNumber class="form-control" id="fieldNivel" placeholder="Nível"
+                                 @bind-Value="_personagem.Nivel"/>
+                    <label style="appearance: textfield" for="fieldNivel">Nível</label>
+                    <ValidationMessage For="@(() => _personagem.Nivel)" class="text-danger"/>
                 </div>
             </div>
 
+            <!-- PV, Armadura e Dano -->
             <div class="col-6">
+                <div class="form-floating mb-3">
+                    <InputText class="form-control" id="fieldImageUrl" placeholder="Url da Imagem"
+                               @bind-Value="_personagem.ImageUrl"/>
+                    <label for="fieldImageUrl">Url da Imagem</label>
+                    <ValidationMessage For="@(() => _personagem.ImageUrl)" class="text-danger"/>
+                </div>
                 <div class="input-group mb-1">
                     <span class="input-group-text bg-black text-white">PV</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.Pv" />
+                    <InputNumber class="form-control" style="appearance: textfield" @bind-Value="_personagem.Pv"/>
                     <span class="input-group-text bg-black text-white">ARM</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.Armadura" />
+                    <InputNumber class="form-control" style="appearance: textfield" @bind-Value="_personagem.Armadura"/>
                     <span class="input-group-text bg-black text-white">DANO</span>
-                    <InputNumber class="form-control" @bind-Value="personagem.DadoDano" />
+                    <InputNumber class="form-control" style="appearance: textfield" @bind-Value="_personagem.DadoDano"/>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <ValidationMessage For="@(() => _personagem.Pv)" class="text-danger"/>
+                    <ValidationMessage For="@(() => _personagem.Armadura)" class="text-danger"/>
+                    <ValidationMessage For="@(() => _personagem.DadoDano)" class="text-danger"/>
                 </div>
             </div>
         </div>
 
-
-        <!-- Seção: Habilidades com Input Group -->
+        <!-- Seção: Habilidades -->
         <div class="mb-4 mt-3">
             <h5>Habilidades</h5>
-           
-        </div>
-
-        <!-- Seção: Atributos e Equipamento lado a lado -->
-        <div class="row">
-
-
-            <div class="col-sm-3">
+            <div class="row">
+                <div class="col-sm-3">
                     <div class="input-group mb-1">
                         <span class="input-group-text bg-black text-white">FOR</span>
-                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Forca" />
+                        <InputNumber class="form-control" style="appearance: textfield"
+                                     @bind-Value="_personagem.Habilidade.Forca"/>
+                        <ValidationMessage For="@(() => _personagem.Habilidade.Forca)" class="text-danger"/>
                     </div>
                     <div class="input-group mb-1">
                         <span class="input-group-text bg-black text-white">DES</span>
-                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Destreza" />
-                    </div>
-                    <div class="input-group mb-1">
-                        <span class="input-group-text bg-black text-white">CAR</span>
-                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Carisma" />
+                        <InputNumber style="appearance: textfield" class="form-control"
+                                     @bind-Value="_personagem.Habilidade.Destreza"/>
+                        <ValidationMessage For="@(() => _personagem.Habilidade.Destreza)" class="text-danger"/>
                     </div>
                     <div class="input-group mb-1">
                         <span class="input-group-text bg-black text-white">CON</span>
-                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Constituicao" />
+                        <InputNumber class="form-control" style="appearance: textfield"
+                                     @bind-Value="_personagem.Habilidade.Constituicao"/>
+                        <ValidationMessage For="@(() => _personagem.Habilidade.Constituicao)" class="text-danger"/>
                     </div>
                     <div class="input-group mb-1">
                         <span class="input-group-text bg-black text-white">INT</span>
-                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Inteligencia" />
+                        <InputNumber class="form-control" style="appearance: textfield"
+                                     @bind-Value="_personagem.Habilidade.Inteligencia"/>
+                        <ValidationMessage For="@(() => _personagem.Habilidade.Inteligencia)" class="text-danger"/>
                     </div>
                     <div class="input-group mb-1">
                         <span class="input-group-text bg-black text-white">SAB</span>
-                        <InputNumber class="form-control" @bind-Value="personagem.Habilidade.Sabedoria" />
+                        <InputNumber class="form-control" style="appearance: textfield"
+                                     @bind-Value="_personagem.Habilidade.Sabedoria"/>
+                        <ValidationMessage For="@(() => _personagem.Habilidade.Sabedoria)" class="text-danger"/>
                     </div>
-            </div>
-            <div class="col-sm-9">
-                <h5 class="bg-dark text-white p-1">Equipamento</h5>
-                <InputTextArea class="form-control-plaintext p-1" placeholder="Digite aqui" style="height: 15rem; box-shadow: none"  @bind-Value="personagem.Equipamento"/>
-            </div>
-        </div>
-
-        <!-- Seção: Aparência e Vínculos -->
-
-        <h5 class="bg-dark text-white p-1 mt-4">Informacoes</h5>
-
-        <!-- Seção: Movimentos -->
-        <div class="mb-4">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <InputTextArea class="form-control-plaintext" placeholder="Digite aqui" style="height: 20rem" @bind-Value="personagem.DescricaoUm"/>
+                    <div class="input-group mb-1">
+                        <span class="input-group-text bg-black text-white">CAR</span>
+                        <InputNumber class="form-control" style="appearance: textfield"
+                                     @bind-Value="_personagem.Habilidade.Carisma"/>
+                        <ValidationMessage For="@(() => _personagem.Habilidade.Carisma)" class="text-danger"/>
+                    </div>
+                    <!-- Repita para Destreza, Carisma, Constituição, Inteligência e Sabedoria -->
                 </div>
-                <div class="col-md-6">
-                    <InputTextArea class="form-control-plaintext" placeholder="Digite aqui" style="height: 20rem" @bind-Value="personagem.DescricaoDois"/>
+                <div class="col-sm-9">
+                    <h5 class="bg-dark text-white p-1">Equipamento</h5>
+                    <InputTextArea class="form-control-plaintext p-1" placeholder="Digite aqui"
+                                   style="height: 15rem; box-shadow: none" @bind-Value="_personagem.Equipamento"/>
+                    <ValidationMessage For="@(() => _personagem.Equipamento)" class="text-danger"/>
                 </div>
             </div>
         </div>
 
-        <!-- Botão de Submissão -->
-       
+
+        <!-- Seção: Descrições -->
+        <h5 class="bg-dark text-white p-1 mt-4">Informações</h5>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <InputTextArea class="form-control-plaintext" placeholder="Digite aqui" style="height: 20rem"
+                               @bind-Value="_personagem.DescricaoUm"/>
+                <ValidationMessage For="@(() => _personagem.DescricaoUm)" class="text-danger"/>
+            </div>
+            <div class="col-md-6">
+                <InputTextArea class="form-control-plaintext" placeholder="Digite aqui" style="height: 20rem"
+                               @bind-Value="_personagem.DescricaoDois"/>
+                <ValidationMessage For="@(() => _personagem.DescricaoDois)" class="text-danger"/>
+            </div>
+        </div>
     </div>
 </EditForm>
 
 @code {
-    [Parameter] public Guid? Id { get; set; }
+    [Parameter] public int? Id { get; set; }
 
-    private Personagem personagem = new() { Habilidade = new Habilidade() };
+    private Personagem _personagem = new() { Habilidade = new Habilidade() };
 
     protected override async Task OnInitializedAsync()
     {
         if (Id.HasValue)
         {
-            personagem = await PersonagemService.GetPersonagemById(Id.Value);
+            _personagem = await PersonagemService.GetPersonagemById(Id.Value);
         }
     }
 
@@ -140,12 +162,13 @@
     {
         if (Id.HasValue)
         {
-            await PersonagemService.AtualizarPersonagem(personagem);
+            await PersonagemService.AtualizarPersonagem(_personagem);
             Navigation.NavigateTo($"/personagens/{Id}");
             return;
         }
-        
-        await PersonagemService.AdicionarPersonagem(personagem);
+
+        await PersonagemService.AdicionarPersonagem(_personagem);
         Navigation.NavigateTo("/personagens"); // Redireciona para a página inicial
     }
+
 }

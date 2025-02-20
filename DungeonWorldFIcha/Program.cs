@@ -1,5 +1,6 @@
 using DungeonWorldFIcha.Components;
 using DungeonWorldFIcha.Database;
+using DungeonWorldFIcha.Hubs;
 using DungeonWorldFIcha.Models;
 using DungeonWorldFIcha.Services;
 
@@ -10,7 +11,10 @@ builder.Services.AddSingleton<MarkdownService>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddDbContext<DungeonWorldContext>();
+builder.Services.AddSingleton<RollCountService>();
 builder.Services.AddScoped<PersonagemService>();
 
 var app = builder.Build();
@@ -23,6 +27,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.MapHub<PersonagemHub>("/personagemHub");
+app.MapHub<DadosHub>("/dadosHub");
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
