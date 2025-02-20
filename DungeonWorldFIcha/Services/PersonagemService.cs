@@ -36,25 +36,21 @@ public class PersonagemService
         {
             _context.Personagens.Update(personagem);
 
-           
-
 
             if (await _context.SaveChangesAsync() > 0)
             {
                 _context.Entry(personagem).State = EntityState.Detached;
 
                 _context.Entry(personagem.Habilidade).State = EntityState.Detached;
-                
+
                 await _personagemHub.Clients.All.SendAsync("AtualizarFicha", personagem);
                 return;
             }
-            
-            
-                _context.Entry(personagem).State = EntityState.Detached;
 
-                _context.Entry(personagem.Habilidade).State = EntityState.Detached;
-            
-            
+
+            _context.Entry(personagem).State = EntityState.Detached;
+
+            _context.Entry(personagem.Habilidade).State = EntityState.Detached;
         }
         catch (Exception e)
         {
@@ -81,5 +77,19 @@ public class PersonagemService
     {
         _context.Personagens.Remove(await GetPersonagemById(id));
         return await _context.SaveChangesAsync() > 0;
+    }
+
+    public string ObterModificadorHabilidade(int atributo)
+    {
+        return atributo switch
+        {
+            18 => "+3",
+            >= 16 => "+2",
+            >= 13 => "+1",
+            >= 9 => "+0",
+            >= 6 => "-1",
+            >= 4 => "-2",
+            _ => "-3" 
+        };
     }
 }

@@ -4,30 +4,43 @@ namespace DungeonWorldFIcha.Services;
 
 public class RollCountService
 {
-    private Queue<string> rolagens = new Queue<string>();
+    private Queue<string> _rolagens = new Queue<string>();
 
 
 
     public void AddRoll(string roll)
     {
-        rolagens.Enqueue(roll);
+        _rolagens.Enqueue(roll);
 
-        if (rolagens.Count > 5)
+        if (_rolagens.Count > 5)
         {
-            rolagens.Dequeue();
+            _rolagens.Dequeue();
         }
     }
 
 
     public bool IsQueueNotEmpty()
     {
-        return rolagens.Count > 0;
+        return _rolagens.Count > 0;
     }
 
 
     public string RenderRoll()
     {
-        return rolagens.Aggregate(string.Empty, (current, rolagem) => current + $"{rolagem}\n");
+        var rolagens = string.Empty;
+
+        foreach (var rolagem in _rolagens)
+        {
+            
+            rolagens += rolagem + ";";
+        }
+        
+        if (!string.IsNullOrEmpty(rolagens)) // Evita erro em string vazia
+        {
+            rolagens = rolagens.Substring(0, rolagens.Length - 1);
+        }
+
+        return rolagens;
     }
     
 }

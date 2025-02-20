@@ -7,10 +7,10 @@
 @using Dice;
 @inject PersonagemService PersonagemService
 @inject NavigationManager Navigation
-@inject IHubContext<DadosHub> HubContext
+@inject IHubContext<DadosHub> DadosHubContext
 @inject MarkdownService MarkdownService
 @inject RollCountService RollCountService
-
+@implements IAsyncDisposable
 
 @rendermode InteractiveServer
 
@@ -61,20 +61,40 @@ else
                         <div class="form-floating">
                             <InputNumber class="form-control" placeholder id="fieldNivel" readonly
                                          @bind-Value="personagem.Nivel"/>
-                            <label for="fieldNivel" class="fs-5">Nível</label>
+                            <label for="fieldNivel " class="fs-5 ">Nível</label>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="input-group mb-1">
-                        <span class="input-group-text bg-black text-white">PV</span>
-                        <InputNumber class="form-control" readonly @bind-Value="personagem.Pv"/>
-                        <span class="input-group-text bg-black text-white">ARM</span>
-                        <InputNumber class="form-control" readonly @bind-Value="personagem.Armadura"/>
-                        <span class="input-group-text bg-black text-white">DANO</span>
-                        <InputNumber class="form-control" readonly @bind-Value="personagem.DadoDano"/>
+                <div class="row g-2">
+
+                    <div class="col-4">
+                        <div class="input-group">
+
+
+                            <span class="input-group-text bg-black text-white font-monospaced fs-3">PV</span>
+                            <InputNumber class="form-control" readonly @bind-Value="personagem.Pv"/>
+                        </div>
+
                     </div>
+
+                    <div class="col-4">
+
+                        <div class="input-group">
+
+                            <span class="input-group-text bg-black text-white font-monospaced fs-3">ARM</span>
+                            <InputNumber class="form-control" readonly @bind-Value="personagem.Armadura"/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group">
+
+                            <span class="input-group-text bg-black text-white font-monospaced fs-3">DANO</span>
+                            <InputNumber class="form-control" readonly @bind-Value="personagem.DadoDano"/>
+                        </div>
+                    </div>
+
+
                 </div>
 
 
@@ -93,30 +113,57 @@ else
 
 
             <div class="col-sm-3">
-                <div class="input-group mb-1">
-                    <span class="input-group-text bg-black text-white">FOR</span>
+                <div class="input-group mb-1" 
+                >
+                    <span class="input-group-text bg-black text-white font-monospaced fs-3">FOR</span>
                     <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Forca"/>
+                    <span @onclick="RollForca"
+                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Forca)</span>
+
                 </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text bg-black text-white">DES</span>
+                <div class="input-group mb-1" 
+
+                >
+                    <span class="input-group-text bg-black text-white font-monospaced fs-3">DES</span>
                     <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Destreza"/>
+                    <span @onclick="RollDestreza"
+                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Destreza)</span>
+
                 </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text bg-black text-white">CAR</span>
-                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Carisma"/>
-                </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text bg-black text-white">CON</span>
+                <div class="input-group mb-1" 
+    
+                >
+                    <span class="input-group-text bg-black text-white font-monospaced fs-3">CON</span>
                     <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Constituicao"/>
+                    <span @onclick="RollConstituicao"
+                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Constituicao)</span>
+
                 </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text bg-black text-white">INT</span>
+                <div class="input-group mb-1" 
+
+                >
+                    <span class="input-group-text bg-black text-white font-monospaced fs-3">INT</span>
                     <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Inteligencia"/>
+                    <span @onclick="RollInteligencia"
+                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Inteligencia)</span>
                 </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text bg-black text-white">SAB</span>
+                <div class="input-group mb-1"
+
+                >
+                    <span class="input-group-text bg-black text-white font-monospaced fs-3">SAB</span>
                     <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Sabedoria"/>
+                    <span  @onclick="RollSabedoria"
+                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Sabedoria)</span>
                 </div>
+                <div class="input-group mb-1"
+
+                >
+                    <span class="input-group-text bg-black text-white font-monospaced fs-3">CAR</span>
+                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Carisma"/>
+                    <span  @onclick="RollCarisma"
+                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Carisma)</span>
+                </div>
+
             </div>
             <div class="col-sm-9">
                 <h5 class="bg-dark text-white p-1">Equipamento</h5>
@@ -131,7 +178,7 @@ else
         <h5 class="bg-dark text-white p-1 mt-4">Informacoes</h5>
 
         <!-- Seção: Movimentos -->
-        <div class="mb-4" >
+        <div class="mb-4">
             <div class="row g-3">
                 <div class="col-md-6">
                     <div class="card p-3">
@@ -146,48 +193,67 @@ else
             </div>
         </div>
 
-        
+
         <H5 class="mb-3">Rolagem de Dados</H5>
-        
+
         <!-- DADOS -->
 
         <div class="container-fluid mb-5">
             <div class="row justify-content-center">
                 <!-- D4 -->
                 <div class="col-3">
-                    <div class="d-flex justify-content-center align-items-center rounded-3" @onclick="() => RollDice(4)" style="width: 100px; height: 100px; background-color: #17a2b8; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                    <div class="d-flex justify-content-center align-items-center rounded-3 cursor-pointer"
+                         @onclick="() => RollDice(4)"
+                         style="width: 100px; height: 100px; background-color: #17a2b8; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
                         <span class="text-white fs-2 fw-bold">d4</span>
                     </div>
                 </div>
 
                 <!-- D6 -->
                 <div class="col-3">
-                    <div class="d-flex justify-content-center align-items-center rounded-3" @onclick="() => RollDice(6)"  style="width: 100px; height: 100px; background-color: #28a745; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                    <div class="d-flex justify-content-center align-items-center rounded-3 cursor-pointer"
+                         @onclick="() => RollDice(6)"
+                         style="width: 100px; height: 100px; background-color: #28a745; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
                         <span class="text-white fs-2 fw-bold">d6</span>
                     </div>
                 </div>
 
                 <!-- D8 -->
                 <div class="col-3">
-                    <div class="d-flex justify-content-center align-items-center rounded-3"  @onclick="() => RollDice(8)"  style="width: 100px; height: 100px; background-color: #ffc107; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                    <div class="d-flex justify-content-center align-items-center rounded-3 cursor-pointer"
+                         @onclick="() => RollDice(8)"
+                         style="width: 100px; height: 100px; background-color: #ffc107; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
                         <span class="text-dark fs-2 fw-bold">d8</span>
                     </div>
                 </div>
 
                 <!-- D10 -->
                 <div class="col-3">
-                    <div class="d-flex justify-content-center align-items-center rounded-3" @onclick="() => RollDice(10)"  style="width: 100px; height: 100px; background-color: #dc3545; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                    <div class="d-flex justify-content-center align-items-center rounded-3 cursor-pointer"
+                         @onclick="() => RollDice(10)"
+                         style="width: 100px; height: 100px; background-color: #dc3545; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
                         <span class="text-white fs-2 fw-bold">d10</span>
                     </div>
                 </div>
             </div>
         </div>
-        
+
     </div>
-    
-    
-    
-   
+
+
+    if (_showModal)
+    {
+        <div class="toast show notification" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Rolagem</strong>
+                <small>now</small>
+                <button type="button" class="btn-close" @onclick="CloseModal" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @notificationMessage
+            </div>
+        </div>
+    }
 }
 
 @code {
@@ -196,18 +262,21 @@ else
     private MarkupString? _equipamentoDigest = null;
     private MarkupString? _descUmDigest = null;
     private MarkupString? _descDoisDigest = null;
-    private HubConnection? _hubConnection;
+    private HubConnection? _hubPersonagemConnection;
+    private HubConnection? _hubDadosConnection;
+    private bool _showModal = false;
+    private string notificationMessage = "";
 
 
     protected override async Task OnInitializedAsync()
     {
-        _hubConnection = new HubConnectionBuilder()
+        _hubPersonagemConnection = new HubConnectionBuilder()
             .WithUrl(Navigation.ToAbsoluteUri("/personagemHub"))
             .Build();
 
-        _hubConnection.On<Personagem>("AtualizarFicha", personagemNovo =>
+        _hubPersonagemConnection.On<Personagem>("AtualizarFicha", personagemNovo =>
         {
-            personagem.Nome = personagemNovo.Nome;
+            personagem!.Nome = personagemNovo.Nome;
             personagem.Armadura = personagemNovo.Armadura;
             personagem.Habilidade = personagemNovo.Habilidade;
             personagem.Equipamento = personagemNovo.Equipamento;
@@ -217,7 +286,7 @@ else
             personagem.DadoDano = personagemNovo.DadoDano;
             personagem.DescricaoUm = personagemNovo.DescricaoUm;
             personagem.DescricaoDois = personagemNovo.DescricaoDois;
-            personagem.ImageUrl = personagemNovo.ImageUrl; 
+            personagem.ImageUrl = personagemNovo.ImageUrl;
 
 
             InvokeAsync(() =>
@@ -228,7 +297,21 @@ else
 
             Console.WriteLine("call invoke async");
         });
-        await _hubConnection.StartAsync();
+
+        _hubDadosConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/dadosHub"))
+            .Build();
+
+        _hubDadosConnection.On<string>("RolarDado", mensagem =>
+        {
+            notificationMessage = mensagem;
+            _showModal = true;
+            InvokeAsync(StateHasChanged);
+        });
+
+        await _hubPersonagemConnection.StartAsync();
+        await _hubDadosConnection.StartAsync();
+
 
         personagem = await PersonagemService.GetPersonagemById(id);
         UpdateHtml();
@@ -250,20 +333,70 @@ else
 
     private void RollDice(int faces)
     {
-        var roll = Roller.Roll($"d"+ faces);
+        var roll = Roller.Roll($"d" + faces);
 
         var message = $"{personagem.Nome} rolou:\n{roll}";
-
-        
-        
         RollCountService.AddRoll(message);
-        HubContext.Clients.All.SendAsync("RolarDado", message);
+        DadosHubContext.Clients.All.SendAsync("RolarDado", message);
+    }
 
+    private void RollDice(int qtd, int faces, string modifier, string atribute)
+    {
+        var roll = Roller.Roll($"{qtd}d{faces}{modifier}");
+
+        var message = $"{personagem.Nome} rolou {atribute}:\n{roll}";
+        RollCountService.AddRoll(message);
+        DadosHubContext.Clients.All.SendAsync("RolarDado", message);
+    }
+
+
+    private void CloseModal()
+    {
+        _showModal = false;
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubPersonagemConnection == null) return;
+        await _hubPersonagemConnection.StopAsync(); // Para a conexão
+        await _hubPersonagemConnection.DisposeAsync(); // Descarta a conexão
+
+        if (_hubDadosConnection == null) return;
+        await _hubDadosConnection.StopAsync(); // Para a conexão
+        await _hubDadosConnection.DisposeAsync(); // Descarta a conexão
+    }
+
+
+    private void RollForca()
+    {
+        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Forca), "Força");
+    }
+
+    private void RollDestreza()
+    {
+        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Destreza), "Destreza");
+    }
+
+    private void RollConstituicao()
+    {
+        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Constituicao), "Constituição");
+    }
+
+    private void RollInteligencia()
+    {
+        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Inteligencia), "Inteligencia");
+    }
+
+    private void RollSabedoria()
+    {
+        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Sabedoria), "Sabedoria");
+    }
+
+    private void RollCarisma()
+    {
+        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Carisma), "Carisma");
     }
     
-    
-    
-
-
 }
 

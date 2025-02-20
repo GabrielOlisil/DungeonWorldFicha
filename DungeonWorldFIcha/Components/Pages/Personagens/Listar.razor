@@ -52,40 +52,10 @@ else
 @code {
     
     private List<Personagem>? _personagens;
-    private HubConnection? _hubConnection;
     
     protected override async Task OnInitializedAsync()
     {
-        
-        
-        
-        
-        
-        
         _personagens = await PersonagemService.GetPersonagens();
-        
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/personagemHub"))
-            .Build();
-
-        _hubConnection.On<Personagem>("AtualizarFicha", personagemNovo =>
-        {
-            var personagemASerAtualizado = _personagens.Find(p => p.PersonagemId == personagemNovo.PersonagemId);
-
-            personagemASerAtualizado.Nome = personagemNovo.Nome;
-            personagemASerAtualizado.Nivel = personagemNovo.Nivel;
-            personagemASerAtualizado.Pv = personagemNovo.Pv;
-            personagemASerAtualizado.Armadura = personagemNovo.Armadura;
-                
-                
-
-            InvokeAsync(() =>
-            {
-                StateHasChanged();
-            });
-        });
-        await _hubConnection.StartAsync();
-        
     }
 
     private void HandleClick(int Id)
@@ -96,7 +66,6 @@ else
     private void HandleCreate()
     {
         Navigation.NavigateTo($"/personagens/novo");
-
     }
 
     private async Task HandleDelete(int id)
