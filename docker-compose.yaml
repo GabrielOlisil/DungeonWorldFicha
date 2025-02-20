@@ -1,0 +1,32 @@
+services:
+  db:
+    image: mariadb:11.7.1-noble-rc
+    container_name: mariadb_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: dungeon_world
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+
+  app:
+    image: dungeon-pp:1.0
+    container_name: blazor_app
+    restart: always
+    depends_on:
+      - db
+    environment:
+      MariaDB__ConnString: "server=db;user=root;password=my-secret-pw;database=dungeon_world;"
+      MariaDB__ServerVersion: "11.7.1"
+      ASPNETCORE_ENVIRONMENT: development
+    ports:
+      - "8080:8080"
+    command: ["sh", "-c", "dotnet ef database update"]
+
+
+volumes:
+  mariadb_data:
+    driver: local
