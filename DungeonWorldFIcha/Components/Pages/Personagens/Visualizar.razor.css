@@ -23,6 +23,6 @@
 
 .notification{
     position: fixed;
-    top: 20px;
+    bottom: 30px;
     right: 30px;
 }

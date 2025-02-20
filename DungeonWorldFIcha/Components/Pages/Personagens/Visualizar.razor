@@ -60,7 +60,7 @@ else
                     <div class="col-4">
                         <div class="form-floating">
                             <InputNumber class="form-control" placeholder id="fieldNivel" readonly
-                                         @bind-Value="personagem.Nivel"/>
+                                         @bind-Value="personagem.Nivel" style="appearance: textfield"/>
                             <label for="fieldNivel " class="fs-5 ">Nível</label>
                         </div>
                     </div>
@@ -68,29 +68,31 @@ else
 
                 <div class="row g-2">
 
-                    <div class="col-4">
+                    <div class="col-6">
                         <div class="input-group">
 
 
-                            <span class="input-group-text bg-black text-white font-monospaced fs-3">PV</span>
-                            <InputNumber class="form-control" readonly @bind-Value="personagem.Pv"/>
+                            <span class="input-group-text bg-black text-white font-monospaced fs-3">PV/Pv Total</span>
+                            <InputNumber class="form-control" readonly @bind-Value="personagem.Pv" style="appearance: textfield"/>
+                            <InputNumber class="form-control"  @bind-Value="personagem.PvTotal" readonly style="appearance: textfield"/>
+
                         </div>
 
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-3">
 
                         <div class="input-group">
 
                             <span class="input-group-text bg-black text-white font-monospaced fs-3">ARM</span>
-                            <InputNumber class="form-control" readonly @bind-Value="personagem.Armadura"/>
+                            <InputNumber class="form-control" readonly @bind-Value="personagem.Armadura" style="appearance: textfield"/>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
                         <div class="input-group">
 
                             <span class="input-group-text bg-black text-white font-monospaced fs-3">DANO</span>
-                            <InputNumber class="form-control" readonly @bind-Value="personagem.DadoDano"/>
+                            <InputNumber class="form-control" readonly @bind-Value="personagem.DadoDano" style="appearance: textfield"/>
                         </div>
                     </div>
 
@@ -116,52 +118,52 @@ else
                 <div class="input-group mb-1" 
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">FOR</span>
-                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Forca"/>
+                    <InputNumber class="form-control" readonly style="appearance: textfield" @bind-Value="personagem.Habilidade.Forca"/>
                     <span @onclick="RollForca"
-                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Forca)</span>
+                        class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Forca)</span>
 
                 </div>
                 <div class="input-group mb-1" 
 
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">DES</span>
-                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Destreza"/>
+                    <InputNumber class="form-control" readonly style="appearance: textfield" @bind-Value="personagem.Habilidade.Destreza"/>
                     <span @onclick="RollDestreza"
-                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Destreza)</span>
+                        class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Destreza)</span>
 
                 </div>
                 <div class="input-group mb-1" 
     
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">CON</span>
-                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Constituicao"/>
+                    <InputNumber class="form-control" readonly style="appearance: textfield" @bind-Value="personagem.Habilidade.Constituicao"/>
                     <span @onclick="RollConstituicao"
-                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Constituicao)</span>
+                        class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Constituicao)</span>
 
                 </div>
                 <div class="input-group mb-1" 
 
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">INT</span>
-                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Inteligencia"/>
+                    <InputNumber class="form-control" readonly style="appearance: textfield" @bind-Value="personagem.Habilidade.Inteligencia"/>
                     <span @onclick="RollInteligencia"
-                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Inteligencia)</span>
+                        class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Inteligencia)</span>
                 </div>
                 <div class="input-group mb-1"
 
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">SAB</span>
-                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Sabedoria"/>
+                    <InputNumber class="form-control" readonly style="appearance: textfield" @bind-Value="personagem.Habilidade.Sabedoria"/>
                     <span  @onclick="RollSabedoria"
-                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Sabedoria)</span>
+                        class="input-group-text bg-black text-white  cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Sabedoria)</span>
                 </div>
                 <div class="input-group mb-1"
 
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">CAR</span>
-                    <InputNumber class="form-control" readonly @bind-Value="personagem.Habilidade.Carisma"/>
-                    <span  @onclick="RollCarisma"
-                        class="input-group-text bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Carisma)</span>
+                    <InputNumber class="form-control" readonly style="appearance: textfield" @bind-Value="personagem.Habilidade.Carisma"/>
+                    <span  @onclick="RollCarisma" 
+                        class="input-group-text cursor-pointer bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Carisma)</span>
                 </div>
 
             </div>

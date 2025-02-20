@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DungeonWorldFIcha.Migrations
 {
     [DbContext(typeof(DungeonWorldContext))]
-    [Migration("20250220010549_InitialCreate")]
+    [Migration("20250220175113_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -98,6 +98,9 @@ namespace DungeonWorldFIcha.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<int>("Pv")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PvTotal")
                         .HasColumnType("int");
 
                     b.HasKey("PersonagemId");

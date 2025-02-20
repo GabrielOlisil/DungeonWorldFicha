@@ -44,6 +44,7 @@ namespace DungeonWorldFIcha.Migrations
                     Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Pv = table.Column<int>(type: "int", nullable: false),
+                    PvTotal = table.Column<int>(type: "int", nullable: false),
                     Armadura = table.Column<int>(type: "int", nullable: false),
                     DadoDano = table.Column<int>(type: "int", nullable: false),
                     Nivel = table.Column<int>(type: "int", nullable: false),

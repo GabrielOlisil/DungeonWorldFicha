@@ -16,6 +16,9 @@ public class Personagem
     public int Pv { get; set; }
 
     [Required(ErrorMessage = "Campo 0brigatório.")]
+    public int PvTotal { get; set; }
+
+    [Required(ErrorMessage = "Campo 0brigatório.")]
     public int Armadura { get; set; }
 
     [Required(ErrorMessage = "Campo 0brigatório.")]

@@ -97,6 +97,9 @@ namespace DungeonWorldFIcha.Migrations
                     b.Property<int>("Pv")
                         .HasColumnType("int");
 
+                    b.Property<int>("PvTotal")
+                        .HasColumnType("int");
+
                     b.HasKey("PersonagemId");
 
                     b.HasIndex("HabilidadeId");
