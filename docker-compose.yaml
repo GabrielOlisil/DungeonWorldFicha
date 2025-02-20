@@ -13,20 +13,22 @@ services:
 
 
   app:
-    image: dungeon-pp:1.0
+    build: .     
     container_name: blazor_app
     restart: always
+    volumes:
+      - data_protection_keys:/var/protection-keys
     depends_on:
       - db
     environment:
       MariaDB__ConnString: "server=db;user=root;password=my-secret-pw;database=dungeon_world;"
       MariaDB__ServerVersion: "11.7.1"
-      ASPNETCORE_ENVIRONMENT: development
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
     ports:
       - "8080:8080"
-    command: ["sh", "-c", "dotnet ef database update"]
 
 
 volumes:
   mariadb_data:
     driver: local
+  data_protection_keys:
