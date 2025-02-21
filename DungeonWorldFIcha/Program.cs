@@ -37,6 +37,7 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
+
 app.ApplyPendingMigrations();
 
 // Configure the HTTP request pipeline.

@@ -10,6 +10,7 @@
 @inject IHubContext<DadosHub> DadosHubContext
 @inject MarkdownService MarkdownService
 @inject RollCountService RollCountService
+@inject IConfiguration Configuration
 @implements IAsyncDisposable
 
 @rendermode InteractiveServer
@@ -272,8 +273,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        var hubHrl = Configuration["HUB_URL"];
+        
+        
         _hubPersonagemConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/personagemHub"))
+            .WithUrl(hubHrl + "/personagemHub")
             .Build();
 
         _hubPersonagemConnection.On<Personagem>("AtualizarFicha", personagemNovo =>
@@ -297,11 +301,10 @@ else
                 StateHasChanged();
             });
 
-            Console.WriteLine("call invoke async");
         });
 
         _hubDadosConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/dadosHub"))
+            .WithUrl(hubHrl + "/dadosHub")
             .Build();
 
         _hubDadosConnection.On<string>("RolarDado", mensagem =>

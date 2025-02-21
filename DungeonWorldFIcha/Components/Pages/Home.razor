@@ -9,6 +9,7 @@
 @using Microsoft.AspNetCore.SignalR
 @inject PersonagemService PersonagemService
 @inject IHubContext<DadosHub> HubContext
+@inject IConfiguration Configuration
 @implements IAsyncDisposable
 
 @rendermode InteractiveServer
@@ -134,6 +135,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var hubHrl = Configuration["HUB_URL"];
+
         _hasRolls = RollCountService.IsQueueNotEmpty();
         _rolagens = RollCountService.RenderRoll()
             .Split(";").ToList();
@@ -143,11 +146,11 @@
 
 
         _hubConnectionDice = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/dadosHub"))
+            .WithUrl(hubHrl + "/dadosHub")
             .Build();
 
         _hubConnectionPersonagem = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/personagemHub"))
+            .WithUrl(hubHrl + "/personagemHub")
             .Build();
 
         _hubConnectionDice.On<string>("RolarDado", (message) =>
