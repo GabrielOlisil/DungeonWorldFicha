@@ -24,7 +24,6 @@ services:
       MariaDB__ConnString: "server=db;user=root;password=my-secret-pw;database=dungeon_world;"
       MariaDB__ServerVersion: "11.7.1"
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
-      ASPNETCORE_ENVIRONMENT: development
       HUB_URL: http://localhost:8080
     networks:
       - internal_net

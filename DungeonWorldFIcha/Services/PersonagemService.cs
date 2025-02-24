@@ -1,12 +1,13 @@
 using DungeonWorldFIcha.Database;
 using DungeonWorldFIcha.Hubs;
 using DungeonWorldFIcha.Models;
+using DungeonWorldFIcha.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace DungeonWorldFIcha.Services;
 
-public class PersonagemService
+public class PersonagemService : IPersonagemService
 {
     private readonly DungeonWorldContext _context;
     private readonly IHubContext<PersonagemHub> _personagemHub;

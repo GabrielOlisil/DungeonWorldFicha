@@ -1,8 +1,9 @@
+using DungeonWorldFIcha.Services.Interfaces;
 using Markdig;
 
 namespace DungeonWorldFIcha.Services;
 
-public class MarkdownService
+public class MarkdownService : IMarkdownService
 {
     private readonly MarkdownPipeline _pipeline;
 

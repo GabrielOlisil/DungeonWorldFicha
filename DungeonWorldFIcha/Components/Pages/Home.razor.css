@@ -1,20 +1,4 @@
-/* Estilo para posicionar o modal no canto inferior direito */
-.modal-dialog-bottom-right {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    margin: 0;
-}
 
-/* Estilo para aumentar o tamanho das letras no corpo do modal */
-.modal-message {
-    font-size: 1.25rem; /* Ajuste o tamanho da fonte conforme necessário */
-}
-
-/* Estilo para aumentar o tamanho das letras no título do modal */
-.modal-title {
-    font-size: 1.5rem; /* Ajuste o tamanho da fonte conforme necessário */
-}
 
 input:focus {
     box-shadow: none;
@@ -25,10 +9,12 @@ input {
     box-shadow: none;
     outline: none;
     border: 0;
+    z-index: 0;
 }
 
 .prompt-container {
     height: 400px;
+    width: 400px;
 }
 
 
@@ -36,4 +22,12 @@ input {
     position: fixed;
     bottom: 20px;
     right: 30px;
+    z-index: 10;
 }
+
+.card-person {
+    width: 300px;
+    height: 500px;
+}
+
+

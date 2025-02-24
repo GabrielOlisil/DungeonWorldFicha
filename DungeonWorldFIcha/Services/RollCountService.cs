@@ -1,8 +1,9 @@
 using System.Collections;
+using DungeonWorldFIcha.Services.Interfaces;
 
 namespace DungeonWorldFIcha.Services;
 
-public class RollCountService
+public class RollCountService : IRollService
 {
     private Queue<string> _rolagens = new Queue<string>();
 

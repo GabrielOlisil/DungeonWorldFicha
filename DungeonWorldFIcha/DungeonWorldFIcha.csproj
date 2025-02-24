@@ -19,6 +19,26 @@
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\js\site.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Models\Serialization\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Models\Serialization\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Models\Serialization\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Models\Serialization\**" />
+    </ItemGroup>
+
 
 
 </Project>

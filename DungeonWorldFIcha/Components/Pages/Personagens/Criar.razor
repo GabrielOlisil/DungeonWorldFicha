@@ -1,7 +1,7 @@
 @page "/Personagens/novo/{id:int?}"
 @using DungeonWorldFIcha.Models
-@using DungeonWorldFIcha.Services
-@inject PersonagemService PersonagemService
+@using DungeonWorldFIcha.Services.Interfaces
+@inject IPersonagemService PersonagemService
 @inject NavigationManager Navigation
 
 @rendermode InteractiveServer
@@ -16,8 +16,9 @@
     <ValidationSummary class="alert alert-danger"/>
 
     <div class="container mt-4">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end gap-3">
             <button type="submit" class="btn btn-success mt-3 mb-5">Salvar Personagem</button>
+            <button class="btn btn-primary mt-3 mb-5" @onclick="HandleImportClick" >Importar</button>
         </div>
 
         <!-- Seção: Nome, Classe e Nível -->
@@ -194,6 +195,11 @@
 
         await PersonagemService.AdicionarPersonagem(_personagem);
         Navigation.NavigateTo("/personagens"); // Redireciona para a página inicial
+    }
+
+    private void HandleImportClick()
+    {
+        Navigation.ToAbsoluteUri("/importar");
     }
 
 }

@@ -1,38 +1,16 @@
 using DungeonWorldFIcha;
 using DungeonWorldFIcha.Components;
-using DungeonWorldFIcha.Database;
 using DungeonWorldFIcha.Hubs;
 using DungeonWorldFIcha.Models;
-using DungeonWorldFIcha.Services;
-using Microsoft.AspNetCore.DataProtection;
+using DungeonWorldFIcha.Services.Interfaces;
+using DungeonWorldFIcha.Api.Endpoints;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-
-if (!builder.Environment.IsDevelopment())
-{
-    const string keysPath = "/var/protection-keys";
-    if (!Directory.Exists(keysPath))
-    {
-        Directory.CreateDirectory(keysPath);
-    }
-    
-    builder.Services.AddDataProtection()
-        .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
-        .SetApplicationName("BlazorApp");
-
-}
-
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-
-builder.Services.AddDbContext<DungeonWorldContext>();
-
-builder.Services.AddApplicationServices();
-
-builder.Services.AddSignalR();
+builder.ConfigureBuilder();
 
 
 var app = builder.Build();
@@ -54,5 +32,8 @@ app.MapHub<DadosHub>("/dadosHub");
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapGroup("/api/exports").MapExportApi();
+
 
 app.Run();

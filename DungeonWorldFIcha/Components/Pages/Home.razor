@@ -1,14 +1,15 @@
 ﻿@page "/"
 @inject NavigationManager Navigation
-@inject RollCountService RollCountService
 @using DungeonWorldFIcha.Models
 @using DungeonWorldFIcha.Services
 @using Microsoft.AspNetCore.SignalR.Client
 @using Dice;
 @using DungeonWorldFIcha.Hubs
+@using DungeonWorldFIcha.Services.Interfaces
 @using Microsoft.AspNetCore.SignalR
-@inject PersonagemService PersonagemService
+@inject IPersonagemService PersonagemService
 @inject IHubContext<DadosHub> HubContext
+@inject IRollService RollCountService
 @inject IConfiguration Configuration
 @implements IAsyncDisposable
 
@@ -36,19 +37,18 @@
 
 
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-9">
+        <div class="col-md-9 col-sm-12">
 
 
             @if (_personagens is not null && _personagens.Any())
             {
-                <div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
+                <div class="d-flex g-4 mb-3 flex-wrap justify-content-around">
                     @foreach (var personagem in _personagens)
                     {
-                        <div class="col">
-                            <div class="card shadow-sm h-100 d-flex flex-column">
-                                <div class="overflow-hidden" style="height: 200px;">
+                            <div class="card flex-shrink-0 card-person shadow-sm">
+                                <div class="overflow-hidden" >
                                     <img src="@personagem.ImageUrl" class="card-img-top w-100 h-100 object-fit-cover"
                                          alt="img">
                                 </div>
@@ -57,7 +57,7 @@
                                         <h5 class="card-title">@personagem.Nome</h5>
                                         <p class="card-text">
                                             <strong>Nível:</strong> @personagem.Nivel <br/>
-                                            <strong>Pv:</strong> @personagem.Pv <br/>
+                                            <strong>Pv:</strong> @personagem.Pv/@personagem.PvTotal <br/>
                                             <strong>Armadura:</strong> @personagem.Armadura
                                         </p>
                                     </div>
@@ -68,8 +68,7 @@
 
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div> 
                     }
                 </div>
             }
@@ -80,9 +79,9 @@
 
         </div>
 
-        <div class="col-3 rounded-1 shadow prompt-container">
+        <div class="col-md-3 col-sm-12 rounded-1 shadow prompt-container">
 
-            <div class="p-0 row bg-dark overflow-hidden" style="height: 100%">
+            <div class="p-0 row bg-dark overflow-hidden h-100" >
                 @if (_hasRolls)
                 {
                     <div class="card text-white bg-dark p-2 mb-5">
@@ -105,15 +104,14 @@
             <div class="row bg-dark" >
 
                 <div class="input-group" style="width: 100%">
-                    <input type="text" class="form-control rounded-0 bg-dark text-white" placeholder="Rolar Dados"
-                           aria-label="Rolar Dados" @bind="_dicePrompt"/>
+                    <input type="text" @onkeydown="HandleInputDice" class="form-control rounded-0 bg-dark text-white" placeholder="Rolar Dados"
+                            @bind="_dicePrompt"/>
                     <button class="btn btn-dark" @onclick="(RollDice)">Rolar</button>
                 </div>
             </div>
                 
         </div>
-
-
+        
     </div>
 </div>
 
@@ -179,6 +177,7 @@
             personagemASerAtualizado.Nivel = personagemNovo.Nivel;
             personagemASerAtualizado.Pv = personagemNovo.Pv;
             personagemASerAtualizado.Armadura = personagemNovo.Armadura;
+            personagemASerAtualizado.ImageUrl = personagemNovo.ImageUrl;
 
 
             InvokeAsync(StateHasChanged);
@@ -236,6 +235,14 @@
             notificationMessage = "Erro Ao rolar dado";
             showModal = true;
             StateHasChanged();
+        }
+    }
+
+    private void HandleInputDice(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            RollDice();
         }
     }
 

@@ -5,11 +5,12 @@
 @using Microsoft.AspNetCore.SignalR
 @using DungeonWorldFIcha.Hubs
 @using Dice;
-@inject PersonagemService PersonagemService
+@using DungeonWorldFIcha.Services.Interfaces
+@inject IPersonagemService PersonagemService
 @inject NavigationManager Navigation
 @inject IHubContext<DadosHub> DadosHubContext
-@inject MarkdownService MarkdownService
-@inject RollCountService RollCountService
+@inject IMarkdownService MarkdownService
+@inject IRollService RollCountService
 @inject IConfiguration Configuration
 @implements IAsyncDisposable
 
@@ -35,7 +36,7 @@ else
         <div class="row g-3 mb-3">
             <!-- Nome -->
             <div class="col-6">
-                <img src="@personagem.ImageUrl" width="400rem" alt="player image">
+                <img src="@personagem.ImageUrl" style="height: 20rem" alt="player image">
             </div>
 
             <div class="col-6">
@@ -402,6 +403,7 @@ else
     {
         RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Carisma), "Carisma");
     }
-    
+
+
 }
 
