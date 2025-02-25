@@ -28,9 +28,9 @@
 else
 {
     <div class="container mt-4">
-        <div class="d-flex justify-content-end">
-            <button @onclick="HandleEdit" class="btn btn-secondary mt-3 mb-5">Editar</button>
-            <a class="btn btn-secondary" href="/api/exports/@id">Exportar</a>
+        <div class="d-flex justify-content-end gap-2">
+            <button @onclick="HandleEdit" class="btn btn-primary mt-3 mb-5">Editar</button>
+            <button class="btn btn-secondary mt-3 mb-5" @onclick="HandleExport">Exportar</button>
         </div>
 
         <!-- Seção: Nome, Raça e Classe com Floating Labels -->
@@ -406,5 +406,9 @@ else
     }
 
 
+    private void HandleExport()
+    {
+        Navigation.NavigateTo($"/api/exports/{id}");
+    }
 }
 
