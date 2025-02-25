@@ -69,3 +69,14 @@ h1:focus {
 .font-monospaced {
     font-family: 'VT323', serif;
 }
+
+.descricao-md p, .descricao-md li {
+    font-family: sans-serif;
+}
+.descricao-md strong {
+    background-color: rgb(123, 98, 159);
+    color: white;
+    padding-left: .2rem;
+    padding-right: .2rem;
+}
+

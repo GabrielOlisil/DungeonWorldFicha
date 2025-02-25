@@ -9,10 +9,10 @@ namespace DungeonWorldFIcha.Api.Endpoints;
 
 public static class ExportEndpoint
 {
-    public static void MapExportApi(this RouteGroupBuilder group)
+    public static void MapApi(this RouteGroupBuilder group)
     {
-        group.MapGet("/{id:int}", ExportPerson);
-
+        group.MapGet("/exports/{id:int}", ExportPerson);
+        group.MapGet("/deleteperson/{id:int}", DeletePerson);
 
     }
 
@@ -29,6 +29,22 @@ public static class ExportEndpoint
         }
         
         return Results.Ok(personagem);
+    }
+    
+    public static async Task<IResult> DeletePerson(int id, IPersonagemService personagemService)
+    {
+        try
+        {
+            if (!await personagemService.RemovePersonageById(id))
+                return Results.BadRequest("Personagem não encontrado");
+
+        }
+        catch
+        {
+            return Results.NotFound("Personagem não encontrado");
+        }
+        
+        return Results.Ok("personagem deletado");
     }
 
 

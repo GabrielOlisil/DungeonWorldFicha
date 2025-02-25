@@ -33,7 +33,7 @@ app.MapHub<DadosHub>("/dadosHub");
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.MapGroup("/api/exports").MapExportApi();
+app.MapGroup("/api/").MapApi();
 
 
 app.Run();

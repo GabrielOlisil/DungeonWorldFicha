@@ -39,12 +39,12 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-9 col-sm-12">
+        <div class="col-9">
 
 
             @if (_personagens is not null && _personagens.Any())
             {
-                <div class="d-flex g-4 mb-3 flex-wrap justify-content-around">
+                <div class="d-flex gap-4 mb-3 flex-wrap justify-content-around">
                     @foreach (var personagem in _personagens)
                     {
                             <div class="card flex-shrink-0 card-person shadow-sm">
@@ -79,7 +79,7 @@
 
         </div>
 
-        <div class="col-md-3 col-sm-12 rounded-1 shadow prompt-container">
+        <div class="col-3 rounded-1 shadow prompt-container mb-5">
 
             <div class="p-0 row bg-dark overflow-hidden h-100" >
                 @if (_hasRolls)
