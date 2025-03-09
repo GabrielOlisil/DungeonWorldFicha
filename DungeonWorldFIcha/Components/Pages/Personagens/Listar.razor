@@ -5,11 +5,12 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager Navigation
 @inject IPersonagemService PersonagemService
-@rendermode InteractiveServer
 
 
+<div class="container mt-4">
+    
 
-<div @onclick="HandleCreate" class="btn btn-success mb-3" >Adicionar</div>
+<a href="/Personagens/novo" class="btn btn-success mb-3">Adicionar</a>
 
 
 @if (_personagens == null)
@@ -22,7 +23,6 @@ else if (!_personagens.Any())
 }
 else
 {
-
     <div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
         @foreach (var personagem in _personagens)
         {
@@ -41,8 +41,8 @@ else
                             </p>
                         </div>
                         <div>
-                            <button class="btn btn-primary w-100 mb-2" @onclick="() => HandleClick(personagem.PersonagemId)">Visualizar</button>
-                           @* <button class="btn btn-danger w-100" @onclick="() => HandleDelete(personagem.PersonagemId)">Remover</button> *@
+                            <a class="btn btn-primary w-100 mb-2" href="/Personagens/@personagem.PersonagemId">Visualizar</a>
+                            @* <button class="btn btn-danger w-100" @onclick="() => HandleDelete(personagem.PersonagemId)">Remover</button> *@
                         </div>
                     </div>
                 </div>
@@ -50,30 +50,16 @@ else
         }
     </div>
 }
+</div>
+
+
 @code {
-    
+
     private List<Personagem>? _personagens;
-    
+
     protected override async Task OnInitializedAsync()
     {
         _personagens = await PersonagemService.GetPersonagens();
     }
 
-    private void HandleClick(int Id)
-    {
-        Navigation.NavigateTo($"/Personagens/{Id}");
-    }
-
-    private void HandleCreate()
-    {
-        Navigation.NavigateTo($"/personagens/novo");
-    }
-
-    private async Task HandleDelete(int id)
-    {
-        if (await PersonagemService.RemovePersonageById(id))
-        {
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-    }
 }

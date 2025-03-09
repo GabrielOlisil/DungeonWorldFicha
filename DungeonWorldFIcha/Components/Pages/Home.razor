@@ -18,7 +18,7 @@
 
 <PageTitle>Home</PageTitle>
 
-<h2>Acompanhamento</h2>
+
 
 @if (showModal)
 {
@@ -39,36 +39,37 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-9">
+        <div class="col-md-6 col-lg-9">
 
+            <h2 class="text-center mb-4 mt-4">Acompanhamento</h2>
 
             @if (_personagens is not null && _personagens.Any())
             {
                 <div class="d-flex gap-4 mb-3 flex-wrap justify-content-around">
                     @foreach (var personagem in _personagens)
                     {
-                            <div class="card flex-shrink-0 card-person shadow-sm">
-                                <div class="overflow-hidden" >
-                                    <img src="@personagem.ImageUrl" class="card-img-top w-100 h-100 object-fit-cover"
-                                         alt="img">
+                        <div class="card flex-shrink-0 card-person shadow-sm">
+                            <div class="overflow-hidden">
+                                <img src="@personagem.ImageUrl" class="card-img-top w-100 h-100 object-fit-cover"
+                                     alt="img">
+                            </div>
+                            <div class="card-body d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="card-title">@personagem.Nome</h5>
+                                    <p class="card-text">
+                                        <strong>Nível:</strong> @personagem.Nivel <br/>
+                                        <strong>Pv:</strong> @personagem.Pv/@personagem.PvTotal <br/>
+                                        <strong>Armadura:</strong> @personagem.Armadura
+                                    </p>
                                 </div>
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <div>
-                                        <h5 class="card-title">@personagem.Nome</h5>
-                                        <p class="card-text">
-                                            <strong>Nível:</strong> @personagem.Nivel <br/>
-                                            <strong>Pv:</strong> @personagem.Pv/@personagem.PvTotal <br/>
-                                            <strong>Armadura:</strong> @personagem.Armadura
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-primary w-100 mb-2"
-                                                @onclick="() => HandleClick(personagem.PersonagemId)">Visualizar
-                                        </button>
+                                <div>
+                                    <button class="btn btn-primary w-100 mb-2"
+                                            @onclick="() => HandleClick(personagem.PersonagemId)">Visualizar
+                                    </button>
 
-                                    </div>
                                 </div>
-                            </div> 
+                            </div>
+                        </div>
                     }
                 </div>
             }
@@ -79,9 +80,9 @@
 
         </div>
 
-        <div class="col-3 rounded-1 shadow prompt-container mb-5">
+        <div class="col-md-6 col-lg-3 bg-dark shadow roll-area mb-5">  @*Tem como fazer esse aqui grudar em baixo na viewport?*@
 
-            <div class="p-0 row bg-dark overflow-hidden h-100" >
+            <div class="p-0 row  overflow-hidden h-100" >
                 @if (_hasRolls)
                 {
                     <div class="card text-white bg-dark p-2 mb-5">
@@ -172,10 +173,12 @@
         _hubConnectionPersonagem.On<Personagem>("AtualizarFicha", personagemNovo =>
         {
             var personagemASerAtualizado = _personagens.Find(p => p.PersonagemId == personagemNovo.PersonagemId);
+            
 
             personagemASerAtualizado!.Nome = personagemNovo.Nome;
             personagemASerAtualizado.Nivel = personagemNovo.Nivel;
             personagemASerAtualizado.Pv = personagemNovo.Pv;
+            personagemASerAtualizado.PvTotal = personagemNovo.PvTotal;
             personagemASerAtualizado.Armadura = personagemNovo.Armadura;
             personagemASerAtualizado.ImageUrl = personagemNovo.ImageUrl;
 

@@ -9,7 +9,7 @@
 
 <PageTitle>Personagem</PageTitle>
 
-<h3 class="mb-4 text-center">Criar Personagem</h3>
+<h3 class="mb-4 mt-4 text-center">  @( Id.HasValue ? "Editar" : "Criar") Personagem</h3>
 
 <EditForm Model="@_personagem" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator/>
@@ -155,7 +155,7 @@
 
         <!-- Seção: Descrições -->
         <h5 class="bg-dark text-white p-1 mt-4">Informações</h5>
-        <div class="row g-3">
+        <div class="row g-3 mb-5">
             <div class="col-md-6">
                 <InputTextArea class="form-control-plaintext" placeholder="Digite aqui" style="height: 20rem"
                                @bind-Value="_personagem.DescricaoUm"/>

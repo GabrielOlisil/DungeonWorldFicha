@@ -12,9 +12,9 @@ input {
     z-index: 0;
 }
 
-.prompt-container {
-    height: 400px;
-    width: 400px;
+.roll-area{
+    
+    min-height: 400px
 }
 
 
@@ -29,5 +29,8 @@ input {
     width: 300px;
     height: 500px;
 }
+
+
+
 
 

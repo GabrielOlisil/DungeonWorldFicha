@@ -38,7 +38,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf  # Montando a configuração do Nginx
     ports:
-      - "8081:80"  # Expondo apenas o Nginx
+      - "8085:80"  # Expondo apenas o Nginx
     networks:
       - external_net  # Nginx exposto ao host
       - internal_net  # Comunicação com a app
