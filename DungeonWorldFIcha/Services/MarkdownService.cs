@@ -15,7 +15,7 @@ public class MarkdownService : IMarkdownService
             .Build();
     }
 
-    public string ConvertToHtml(string markdown)
+    public string ConvertToHtml(string? markdown)
     {
         if (markdown is null)
         {

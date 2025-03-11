@@ -9,7 +9,7 @@
 
 <PageTitle>Personagem</PageTitle>
 
-<h3 class="mb-4 mt-4 text-center">  @( Id.HasValue ? "Editar" : "Criar") Personagem</h3>
+<h3 class="mb-4 mt-4 text-center"> @(Id.HasValue ? "Editar" : "Criar") Personagem</h3>
 
 <EditForm Model="@_personagem" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator/>
@@ -66,9 +66,12 @@
                             <div class="input-group">
 
 
-                                <span class="input-group-text bg-black text-white font-monospaced fs-3">PV/Pv Total</span>
-                                <InputNumber class="form-control" @bind-Value="_personagem.Pv" style="appearance: textfield" />
-                                <InputNumber class="form-control"  @bind-Value="_personagem.PvTotal" style="appearance: textfield"/>
+                                <span
+                                    class="input-group-text bg-black text-white font-monospaced fs-3">PV/Pv Total</span>
+                                <InputNumber class="form-control" @bind-Value="_personagem.Pv"
+                                             style="appearance: textfield"/>
+                                <InputNumber class="form-control" @bind-Value="_personagem.PvTotal"
+                                             style="appearance: textfield"/>
                             </div>
 
                         </div>
@@ -78,14 +81,16 @@
                             <div class="input-group">
 
                                 <span class="input-group-text bg-black text-white font-monospaced fs-3">ARM</span>
-                                <InputNumber class="form-control"  @bind-Value="_personagem.Armadura" style="appearance: textfield"/>
+                                <InputNumber class="form-control" @bind-Value="_personagem.Armadura"
+                                             style="appearance: textfield"/>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="input-group">
 
                                 <span class="input-group-text bg-black text-white font-monospaced fs-3">DANO</span>
-                                <InputNumber class="form-control"  @bind-Value="_personagem.DadoDano" style="appearance: textfield"/>
+                                <InputNumber class="form-control" @bind-Value="_personagem.DadoDano"
+                                             style="appearance: textfield"/>
                             </div>
                         </div>
 
@@ -177,10 +182,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (Id.HasValue)
-        {
-            _personagem = await PersonagemService.GetPersonagemById(Id.Value);
-        }
+        if (!Id.HasValue)
+            return;
+        
+        _personagem = await PersonagemService.GetPersonagemById(Id.Value);
     }
 
     private async Task HandleValidSubmit()

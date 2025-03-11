@@ -1,7 +1,6 @@
 ﻿@page "/"
 @inject NavigationManager Navigation
 @using DungeonWorldFIcha.Models
-@using DungeonWorldFIcha.Services
 @using Microsoft.AspNetCore.SignalR.Client
 @using Dice;
 @using DungeonWorldFIcha.Hubs
@@ -20,7 +19,7 @@
 
 
 
-@if (showModal)
+@if (ShowModal)
 {
     <div class="toast show notification" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
@@ -29,7 +28,7 @@
             <button type="button" class="btn-close" @onclick="CloseModal" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-            @notificationMessage
+            @_notificationMessage
         </div>
     </div>
 }
@@ -86,7 +85,7 @@
                 @if (_hasRolls)
                 {
                     <div class="card text-white bg-dark p-2 mb-5">
-                        @foreach (var rolagem in _rolagens)
+                        @foreach (var rolagem in _rolagens!)
                         {
                             <pre class="mb-1"><code class="text-white">@rolagem</code></pre>
                             <hr/>
@@ -106,7 +105,7 @@
 
                 <div class="input-group" style="width: 100%">
                     <input type="text" @onkeydown="HandleInputDice" class="form-control rounded-0 bg-dark text-white" placeholder="Rolar Dados"
-                            @bind="_dicePrompt"/>
+                            @bind="DicePrompt"/>
                     <button class="btn btn-dark" @onclick="(RollDice)">Rolar</button>
                 </div>
             </div>
@@ -125,11 +124,11 @@
 
     private HubConnection? _hubConnectionDice;
     private HubConnection? _hubConnectionPersonagem;
-    private bool showModal { get; set; } = false;
-    private string notificationMessage = "";
-    private bool _hasRolls = false;
-    private List<string> _rolagens;
-    private string _dicePrompt { get; set; } = "";
+    private bool ShowModal { get; set; }
+    private string _notificationMessage = string.Empty;
+    private bool _hasRolls;
+    private List<string>? _rolagens;
+    private string DicePrompt { get; set; } = string.Empty;
 
 
     protected override async Task OnInitializedAsync()
@@ -156,15 +155,12 @@
         {
             // Quando uma mensagem for recebida, mostramos o modal com a mensagem
 
-            notificationMessage = message;
-            showModal = true;
+            _notificationMessage = message;
+            ShowModal = true;
             _rolagens = RollCountService.RenderRoll()
                 .Split(";").ToList();
             _hasRolls = RollCountService.IsQueueNotEmpty();
-            InvokeAsync(() =>
-            {
-                StateHasChanged();
-            });
+            InvokeAsync(StateHasChanged);
 
             
         });
@@ -194,7 +190,7 @@
 
     private void CloseModal()
     {
-        showModal = false;
+        ShowModal = false;
         StateHasChanged();
     }
 
@@ -222,21 +218,20 @@
 
     private void RollDice()
     {
-        var message = string.Empty;
         try
         {
-            var diceResult = Roller.Roll(_dicePrompt);
+            var diceResult = Roller.Roll(DicePrompt);
 
-            message = $"Rolagem Personalizada:\n{diceResult}";
+            var message = $"Rolagem Personalizada:\n{diceResult}";
             RollCountService.AddRoll(message);
-            _dicePrompt = String.Empty;
+            DicePrompt = string.Empty;
 
             HubContext.Clients.All.SendAsync("RolarDado", message);
         }
         catch
         {
-            notificationMessage = "Erro Ao rolar dado";
-            showModal = true;
+            _notificationMessage = "Erro Ao rolar dado";
+            ShowModal = true;
             StateHasChanged();
         }
     }

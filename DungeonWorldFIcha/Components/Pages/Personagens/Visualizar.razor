@@ -1,6 +1,5 @@
-@page "/Personagens/{id:int}"
+@page "/Personagens/{Id:int}"
 @using DungeonWorldFIcha.Models
-@using DungeonWorldFIcha.Services
 @using Microsoft.AspNetCore.SignalR.Client
 @using Microsoft.AspNetCore.SignalR
 @using DungeonWorldFIcha.Hubs
@@ -20,10 +19,10 @@
 <PageTitle>Visualizar Personagem</PageTitle>
 
 <h3 class="mb-4 mt-4 text-center">
-    @(personagem is null? "Personagem" : personagem.Nome)
+    @(_personagem is null? "Personagem" : _personagem.Nome)
 </h3>
 
-@if (personagem == null)
+@if (_personagem == null)
 {
     <p>Carregando personagem...</p>
 }
@@ -39,7 +38,7 @@ else
         <div class="row g-3 mb-3">
             <!-- Nome -->
             <div class="col-6">
-                <img src="@personagem.ImageUrl" style="height: 20rem" alt="player image">
+                <img src="@_personagem.ImageUrl" style="height: 20rem" alt="player image">
             </div>
 
             <div class="col-6">
@@ -49,7 +48,7 @@ else
                     <div class="col-4">
                         <div class="form-floating">
                             <InputText class="form-control" id="fieldName" readonly placeholder="Nome"
-                                       @bind-Value="personagem.Nome"/>
+                                       @bind-Value="_personagem.Nome"/>
                             <label for="fieldName">Nome</label>
                         </div>
                     </div>
@@ -57,7 +56,7 @@ else
                     <div class="col-4">
                         <div class="form-floating">
                             <InputText class="form-control" placeholder id="fieldClasse" readonly
-                                       @bind-Value="personagem.Classe"/>
+                                       @bind-Value="_personagem.Classe"/>
                             <label for="fieldClasse">Classe</label>
                         </div>
                     </div>
@@ -65,8 +64,8 @@ else
                     <div class="col-4">
                         <div class="form-floating">
                             <InputNumber class="form-control" placeholder id="fieldNivel" readonly
-                                         @bind-Value="personagem.Nivel" style="appearance: textfield"/>
-                            <label for="fieldNivel " class="fs-5 ">Nível</label>
+                                         @bind-Value="_personagem.Nivel" style="appearance: textfield"/>
+                            <label for="fieldNivel" class="fs-5 ">Nível</label>
                         </div>
                     </div>
                 </div>
@@ -78,9 +77,9 @@ else
 
 
                             <span class="input-group-text bg-black text-white font-monospaced fs-3">PV/Pv Total</span>
-                            <InputNumber class="form-control" readonly @bind-Value="personagem.Pv"
+                            <InputNumber class="form-control" readonly @bind-Value="_personagem.Pv"
                                          style="appearance: textfield"/>
-                            <InputNumber class="form-control" @bind-Value="personagem.PvTotal" readonly
+                            <InputNumber class="form-control" @bind-Value="_personagem.PvTotal" readonly
                                          style="appearance: textfield"/>
 
                         </div>
@@ -92,7 +91,7 @@ else
                         <div class="input-group">
 
                             <span class="input-group-text bg-black text-white font-monospaced fs-3">ARM</span>
-                            <InputNumber class="form-control" readonly @bind-Value="personagem.Armadura"
+                            <InputNumber class="form-control" readonly @bind-Value="_personagem.Armadura"
                                          style="appearance: textfield"/>
                         </div>
                     </div>
@@ -100,7 +99,7 @@ else
                         <div class="input-group">
 
                             <span class="input-group-text bg-black text-white font-monospaced fs-3">DANO</span>
-                            <InputNumber class="form-control" readonly @bind-Value="personagem.DadoDano"
+                            <InputNumber class="form-control" readonly @bind-Value="_personagem.DadoDano"
                                          style="appearance: textfield"/>
                         </div>
                     </div>
@@ -128,9 +127,9 @@ else
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">FOR</span>
                     <InputNumber class="form-control" readonly style="appearance: textfield"
-                                 @bind-Value="personagem.Habilidade.Forca"/>
-                    <span @onclick="RollForca"
-                          class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Forca)</span>
+                                 @bind-Value="_personagem.Habilidade.Forca"/>
+                    <span @onclick="()=> RollAttribute(Atributo.Forca)"
+                          class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Forca)</span>
 
                 </div>
                 <div class="input-group mb-1"
@@ -138,9 +137,9 @@ else
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">DES</span>
                     <InputNumber class="form-control" readonly style="appearance: textfield"
-                                 @bind-Value="personagem.Habilidade.Destreza"/>
-                    <span @onclick="RollDestreza"
-                          class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Destreza)</span>
+                                 @bind-Value="_personagem.Habilidade.Destreza"/>
+                    <span @onclick="()=> RollAttribute(Atributo.Desteza)"
+                          class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Destreza)</span>
 
                 </div>
                 <div class="input-group mb-1"
@@ -148,9 +147,9 @@ else
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">CON</span>
                     <InputNumber class="form-control" readonly style="appearance: textfield"
-                                 @bind-Value="personagem.Habilidade.Constituicao"/>
-                    <span @onclick="RollConstituicao"
-                          class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Constituicao)</span>
+                                 @bind-Value="_personagem.Habilidade.Constituicao"/>
+                    <span @onclick="()=> RollAttribute(Atributo.Constituicao)"
+                          class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Constituicao)</span>
 
                 </div>
                 <div class="input-group mb-1"
@@ -158,27 +157,27 @@ else
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">INT</span>
                     <InputNumber class="form-control" readonly style="appearance: textfield"
-                                 @bind-Value="personagem.Habilidade.Inteligencia"/>
-                    <span @onclick="RollInteligencia"
-                          class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Inteligencia)</span>
+                                 @bind-Value="_personagem.Habilidade.Inteligencia"/>
+                    <span @onclick="()=> RollAttribute(Atributo.Inteligencia)"
+                          class="input-group-text bg-black text-white cursor-pointer">@PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Inteligencia)</span>
                 </div>
                 <div class="input-group mb-1"
 
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">SAB</span>
                     <InputNumber class="form-control" readonly style="appearance: textfield"
-                                 @bind-Value="personagem.Habilidade.Sabedoria"/>
-                    <span @onclick="RollSabedoria"
-                          class="input-group-text bg-black text-white  cursor-pointer">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Sabedoria)</span>
+                                 @bind-Value="_personagem.Habilidade.Sabedoria"/>
+                    <span @onclick="()=> RollAttribute(Atributo.Sabedoria)"
+                          class="input-group-text bg-black text-white  cursor-pointer">@PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Sabedoria)</span>
                 </div>
                 <div class="input-group mb-1"
 
                 >
                     <span class="input-group-text bg-black text-white font-monospaced fs-3">CAR</span>
                     <InputNumber class="form-control" readonly style="appearance: textfield"
-                                 @bind-Value="personagem.Habilidade.Carisma"/>
-                    <span @onclick="RollCarisma"
-                          class="input-group-text cursor-pointer bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Carisma)</span>
+                                 @bind-Value="_personagem.Habilidade.Carisma"/>
+                    <span @onclick="()=> RollAttribute(Atributo.Carisma)"
+                          class="input-group-text cursor-pointer bg-black text-white ">@PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Carisma)</span>
                 </div>
 
             </div>
@@ -211,7 +210,7 @@ else
         </div>
 
 
-        <H5 class="mb-3">Rolagem de Dados</H5>
+        <h5 class="mb-3">Rolagem de Dados</h5>
 
         <!-- DADOS -->
 
@@ -267,27 +266,42 @@ else
                 <button type="button" class="btn-close" @onclick="CloseModal" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                @notificationMessage
+                @_notificationMessage
             </div>
         </div>
     }
 }
 
 @code {
-    [Parameter] public int id { get; set; }
-    private Personagem? personagem = null;
-    private MarkupString? _equipamentoDigest = null;
-    private MarkupString? _descUmDigest = null;
-    private MarkupString? _descDoisDigest = null;
+    [Parameter] public int Id { get; set; }
+    private Personagem? _personagem;
+    private MarkupString? _equipamentoDigest;
+    private MarkupString? _descUmDigest;
+    private MarkupString? _descDoisDigest;
     private HubConnection? _hubPersonagemConnection;
     private HubConnection? _hubDadosConnection;
-    private bool _showModal = false;
-    private string notificationMessage = "";
+    private bool _showModal;
+    private string _notificationMessage = string.Empty;
 
+    enum Atributo
+    {
+        Forca,
+        Desteza,
+        Inteligencia,
+        Sabedoria,
+        Constituicao,
+        Carisma
+    }
 
     protected override async Task OnInitializedAsync()
     {
         var hubHrl = Configuration["HUB_URL"];
+
+        if (string.IsNullOrEmpty(hubHrl))
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
 
 
         _hubPersonagemConnection = new HubConnectionBuilder()
@@ -296,28 +310,27 @@ else
 
         _hubPersonagemConnection.On<Personagem>("AtualizarFicha", personagemNovo =>
         {
-            if (personagemNovo.PersonagemId == personagem!.PersonagemId)
+            if (personagemNovo.PersonagemId != _personagem!.PersonagemId) return;
+            
+            _personagem!.Nome = personagemNovo.Nome;
+            _personagem.Armadura = personagemNovo.Armadura;
+            _personagem.Habilidade = personagemNovo.Habilidade;
+            _personagem.Equipamento = personagemNovo.Equipamento;
+            _personagem.Classe = personagemNovo.Classe;
+            _personagem.Nivel = personagemNovo.Nivel;
+            _personagem.Pv = personagemNovo.Pv;
+            _personagem.PvTotal = personagemNovo.PvTotal;
+            _personagem.DadoDano = personagemNovo.DadoDano;
+            _personagem.DescricaoUm = personagemNovo.DescricaoUm;
+            _personagem.DescricaoDois = personagemNovo.DescricaoDois;
+            _personagem.ImageUrl = personagemNovo.ImageUrl;
+
+
+            InvokeAsync(() =>
             {
-                personagem!.Nome = personagemNovo.Nome;
-                personagem.Armadura = personagemNovo.Armadura;
-                personagem.Habilidade = personagemNovo.Habilidade;
-                personagem.Equipamento = personagemNovo.Equipamento;
-                personagem.Classe = personagemNovo.Classe;
-                personagem.Nivel = personagemNovo.Nivel;
-                personagem.Pv = personagemNovo.Pv;
-                personagem.PvTotal = personagemNovo.PvTotal;
-                personagem.DadoDano = personagemNovo.DadoDano;
-                personagem.DescricaoUm = personagemNovo.DescricaoUm;
-                personagem.DescricaoDois = personagemNovo.DescricaoDois;
-                personagem.ImageUrl = personagemNovo.ImageUrl;
-
-
-                InvokeAsync(() =>
-                {
-                    UpdateHtml();
-                    StateHasChanged();
-                });
-            }
+                UpdateHtml();
+                StateHasChanged();
+            });
         });
 
         _hubDadosConnection = new HubConnectionBuilder()
@@ -326,7 +339,7 @@ else
 
         _hubDadosConnection.On<string>("RolarDado", mensagem =>
         {
-            notificationMessage = mensagem;
+            _notificationMessage = mensagem;
             _showModal = true;
             InvokeAsync(StateHasChanged);
         });
@@ -335,41 +348,70 @@ else
         await _hubDadosConnection.StartAsync();
 
 
-        personagem = await PersonagemService.GetPersonagemById(id);
+        _personagem = await PersonagemService.GetPersonagemById(Id);
         UpdateHtml();
     }
 
     private void UpdateHtml()
     {
-        _equipamentoDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.Equipamento));
-        _descUmDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.DescricaoUm));
-
-        _descDoisDigest = new MarkupString(MarkdownService.ConvertToHtml(personagem.DescricaoDois));
+        if (_personagem is null) 
+            return;
+        
+        
+        _equipamentoDigest = new MarkupString(MarkdownService.ConvertToHtml(_personagem.Equipamento));
+        _descUmDigest = new MarkupString(MarkdownService.ConvertToHtml(_personagem.DescricaoUm));
+        _descDoisDigest = new MarkupString(MarkdownService.ConvertToHtml(_personagem.DescricaoDois));
     }
 
     private void HandleEdit()
     {
-        Navigation.NavigateTo($"personagens/novo/{id}");
+        Navigation.NavigateTo($"personagens/novo/{Id}");
     }
 
 
     private void RollDice(int faces)
     {
+        if(_personagem is null)
+            return;
+        
         var roll = Roller.Roll($"d" + faces);
 
-        var message = $"{personagem.Nome} rolou:\n{roll}";
+        var message = $"{_personagem.Nome} rolou:\n{roll}";
         RollCountService.AddRoll(message);
         DadosHubContext.Clients.All.SendAsync("RolarDado", message);
     }
 
-    private void RollDice(int qtd, int faces, string modifier, string atribute)
+    private void RollDice(string modifier, string atribute)
     {
-        var roll = Roller.Roll($"{qtd}d{faces}{modifier}");
+        if(_personagem is null)
+            return;
+        
+        var roll = Roller.Roll($"2d6{modifier}");
 
-        var message = $"{personagem.Nome} rolou {atribute}:\n{roll}";
+        var message = $"{_personagem.Nome} rolou {atribute}:\n{roll}";
         RollCountService.AddRoll(message);
         DadosHubContext.Clients.All.SendAsync("RolarDado", message);
     }
+    
+    private void RollAttribute(Atributo atribute)
+    {
+        if(_personagem?.Habilidade is null)
+            return;
+        
+        var modifier = atribute switch
+        {
+            Atributo.Forca => PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Forca),
+            Atributo.Desteza => PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Destreza),
+            Atributo.Inteligencia => PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Inteligencia),
+            Atributo.Sabedoria => PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Sabedoria),
+            Atributo.Constituicao => PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Constituicao),
+            Atributo.Carisma => PersonagemService.ObterModificadorHabilidade(_personagem.Habilidade.Carisma),
+            _ => "+0"
+        };
+
+        RollDice(modifier, atribute.ToString());
+    }
+
 
 
     private void CloseModal()
@@ -389,41 +431,9 @@ else
         await _hubDadosConnection.DisposeAsync(); // Descarta a conexão
     }
 
-
-    private void RollForca()
-    {
-        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Forca), "Força");
-    }
-
-    private void RollDestreza()
-    {
-        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Destreza), "Destreza");
-    }
-
-    private void RollConstituicao()
-    {
-        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Constituicao), "Constituição");
-    }
-
-    private void RollInteligencia()
-    {
-        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Inteligencia), "Inteligencia");
-    }
-
-    private void RollSabedoria()
-    {
-        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Sabedoria), "Sabedoria");
-    }
-
-    private void RollCarisma()
-    {
-        RollDice(2, 6, @PersonagemService.ObterModificadorHabilidade(personagem.Habilidade.Carisma), "Carisma");
-    }
-
-
     private void HandleExport()
     {
-        Navigation.NavigateTo($"/api/exports/{id}");
+        Navigation.NavigateTo($"/api/exports/{Id}");
     }
 
 }
