@@ -9,4 +9,14 @@ public class PersonagemHub : Hub
     {
         await Clients.All.SendAsync("AtualizarFicha", personagem);
     }
+    
+    public async Task JoinGroup(string groupName)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+    }
+    
+    public async Task LeaveGroup(string groupName)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+    }
 }

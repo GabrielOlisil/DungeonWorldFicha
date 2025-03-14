@@ -36,7 +36,8 @@ public class PersonagemService(DungeonWorldContext context, IHubContext<Personag
 
                 context.Entry(personagem.Habilidade).State = EntityState.Detached;
 
-                await personagemHub.Clients.All.SendAsync("AtualizarFicha", personagem);
+                await personagemHub.Clients.Group(personagem.PersonagemId.ToString())
+                    .SendAsync("AtualizarFicha", personagem);
                 return;
             }
 

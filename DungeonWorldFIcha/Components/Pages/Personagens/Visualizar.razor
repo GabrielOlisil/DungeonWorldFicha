@@ -295,6 +295,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        _personagem = await PersonagemService.GetPersonagemById(Id);
+
         var hubHrl = Configuration["HUB_URL"];
 
         if (string.IsNullOrEmpty(hubHrl))
@@ -304,13 +306,16 @@ else
         }
 
 
+
         _hubPersonagemConnection = new HubConnectionBuilder()
             .WithUrl(hubHrl + "/personagemHub")
             .Build();
+        
+        await _hubPersonagemConnection.StartAsync();
+        await _hubPersonagemConnection.InvokeAsync("JoinGroup", _personagem.PersonagemId.ToString());
 
         _hubPersonagemConnection.On<Personagem>("AtualizarFicha", personagemNovo =>
         {
-            if (personagemNovo.PersonagemId != _personagem!.PersonagemId) return;
             
             _personagem!.Nome = personagemNovo.Nome;
             _personagem.Armadura = personagemNovo.Armadura;
@@ -344,17 +349,15 @@ else
             InvokeAsync(StateHasChanged);
         });
 
-        await _hubPersonagemConnection.StartAsync();
         await _hubDadosConnection.StartAsync();
 
 
-        _personagem = await PersonagemService.GetPersonagemById(Id);
         UpdateHtml();
     }
 
     private void UpdateHtml()
     {
-        if (_personagem is null) 
+        if (_personagem is null)
             return;
         
         
@@ -422,9 +425,13 @@ else
 
     public async ValueTask DisposeAsync()
     {
-        if (_hubPersonagemConnection == null) return;
-        await _hubPersonagemConnection.StopAsync(); // Para a conexão
-        await _hubPersonagemConnection.DisposeAsync(); // Descarta a conexão
+        if (_hubPersonagemConnection != null && _personagem != null)
+        {
+            // Sai do grupo antes de encerrar a conexão
+            await _hubPersonagemConnection.InvokeAsync("LeaveGroup", _personagem.PersonagemId.ToString());
+            await _hubPersonagemConnection.StopAsync();
+            await _hubPersonagemConnection.DisposeAsync();
+        }
 
         if (_hubDadosConnection == null) return;
         await _hubDadosConnection.StopAsync(); // Para a conexão
